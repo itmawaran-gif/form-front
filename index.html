@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستەمی نوێنەران</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --p: #2563eb; --s: #64748b; --bg: #f1f5f9; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 15px; }
+        
+        .container { max-width: 800px; margin: auto; }
+
+        /* منطقة الإحصائيات - مرتبة وتظهر الكل */
+        .stats-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
+            gap: 10px; 
+            margin-bottom: 20px; 
+        }
+
+        .stat-card { 
+            background: white; 
+            padding: 12px 5px; 
+            border-radius: 15px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            text-align: center; 
+            border-bottom: 4px solid var(--p);
+        }
+
+        .stat-card h5 { margin: 0; color: var(--s); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .stat-card div { font-weight: bold; color: var(--p); font-size: 20px; margin-top: 5px; }
+        .stat-card.zero { border-bottom-color: #cbd5e1; opacity: 0.7; }
+        .stat-card.zero div { color: #94a3b8; }
+
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        
+        .filter-group { display: flex; flex-direction: column; gap: 8px; }
+        @media (min-width: 600px) { .filter-group { flex-direction: row; } }
+
+        select, input, button { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 16px; box-sizing: border-box; }
+        button { background: var(--p); color: white; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        /* الزيارات بشكل عمودي متسلسل */
+        #results { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+        }
+
+        .visit-item { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 15px; 
+            border-right: 6px solid var(--p); 
+            cursor: pointer; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+        .visit-item:hover { background: #f8fafc; transform: translateX(-5px); }
+        .visit-info { flex-grow: 1; }
+        .visit-time { color: var(--s); font-size: 13px; }
+
+        /* المودال */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.9); z-index: 1000; }
+        .modal-content { background: white; width: 95%; max-width: 450px; margin: 30px auto; border-radius: 25px; padding: 20px; box-sizing: border-box; max-height: 85vh; overflow-y: auto; }
+        .img-box { width: 100%; border-radius: 15px; margin-bottom: 15px; display: none; }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table td { padding: 10px 5px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        .btn-act { flex: 1; padding: 12px; text-align: center; border-radius: 12px; color: white; text-decoration: none; font-weight: bold; background:#10b981; }
+        .btn-close { background: #f1f5f9; color: #1e293b; width: 100%; border: none; padding: 12px; border-radius: 12px; margin-top: 10px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="statsArea" class="stats-container"></div>
+
+    <div class="card">
+        <div class="filter-group">
+            <select id="smList"><option>باردەکرێت...</option></select>
+            <input type="date" id="sDate" onchange="loadStats()">
+            <button onclick="search()">بگەڕێ <i class="fas fa-search"></i></button>
+        </div>
+    </div>
+
+    <div id="loader" style="display:none; text-align:center; padding: 20px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--p)"></i></div>
+    
+    <div id="results"></div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 id="mTitle" style="color:var(--p); margin-top:0; text-align:center;"></h3>
+        <img id="mImg" class="img-box" src="">
+        <div id="mBody"></div>
+        <div class="btns" id="mFooter" style="margin-top:15px; display:flex;"></div>
+        <button class="btn-close" onclick="closeModal()">داخستن</button>
+    </div>
+</div>
+
+<script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycby17rf-ZbAtTfbbPGxxUAkdc46DdsguQKuHdRw0YwlvsXqVLIP4_2FIgOiTqhKvoCGK/exec';
+
+    window.onload = () => {
+        document.getElementById('sDate').valueAsDate = new Date();
+        loadStats();
+        
+        // تعديل هنا لمنع التكرار
+        fetch(`${API_URL}?action=getSalesmen`)
+            .then(r => r.json())
+            .then(data => {
+                // استخدام Set لإزالة الأسماء المكررة تلقائياً
+                const uniqueSalesmen = [...new Set(data)];
+                
+                document.getElementById('smList').innerHTML = 
+                    '<option value="">نوێنەرێک هەڵبژێرە</option>' + 
+                    uniqueSalesmen.map(n => `<option value="${n}">${n}</option>`).join('');
+            });
+    };
+
+    function loadStats() {
+        const dt = document.getElementById('sDate').value;
+        const statsArea = document.getElementById('statsArea');
+        // عدم مسح المحتوى بالكامل لتجنب "القفزة" في التصميم، فقط إظهار حالة التحميل
+        statsArea.style.opacity = "0.5";
+        
+        fetch(`${API_URL}?action=getStats&date=${dt}`).then(r => r.json()).then(data => {
+            statsArea.style.opacity = "1";
+            statsArea.innerHTML = '';
+            for(let sm in data) {
+                let isZero = data[sm] === 0;
+                statsArea.innerHTML += `
+                    <div class="stat-card ${isZero ? 'zero' : ''}">
+                        <h5>${sm}</h5>
+                        <div>${data[sm]}</div>
+                    </div>`;
+            }
+        });
+    }
+
+    async function search() {
+        const sm = document.getElementById('smList').value;
+        const dt = document.getElementById('sDate').value;
+        const resDiv = document.getElementById('results');
+        const loader = document.getElementById('loader');
+
+        resDiv.innerHTML = '';
+        loader.style.display = 'block';
+
+        fetch(`${API_URL}?action=search&salesman=${encodeURIComponent(sm)}&date=${dt}`).then(r => r.json()).then(data => {
+            loader.style.display = 'none';
+            if(!data || data.length === 0) { 
+                resDiv.innerHTML = '<div class="card" style="text-align:center; color:gray;">هیچ چالاکییەک نەدۆزرایەوە</div>'; 
+                return; 
+            }
+            
+            // عرض النتائج بشكل عمودي متسلسل
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'visit-item';
+                div.onclick = () => showDetails(item);
+                div.innerHTML = `
+                    <div class="visit-info">
+                        <strong>${item.name}</strong><br>
+                        <small style="color:var(--s)">${item.type}</small>
+                    </div>
+                    <div class="visit-time">
+                        <i class="far fa-clock"></i> ${item.duration}
+                    </div>
+                `;
+                resDiv.appendChild(div);
+            });
+        });
+    }
+
+    function showDetails(item) {
+        document.getElementById('mTitle').innerText = item.name;
+        const img = document.getElementById('mImg');
+        if(item.photo) {
+            let fileId = item.photo.includes('id=') ? item.photo.split('id=')[1].split('&')[0] : item.photo.split('/d/')[1].split('/')[0];
+            img.src = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+            img.style.display = 'block';
+        } else { img.style.display = 'none'; }
+
+        let html = '<table class="data-table">';
+        for(let key in item.allData) if(item.allData[key] && !['Latitude','Longitude','Photo','location'].includes(key)) 
+            html += `<tr><td style="color:#64748b; font-weight:bold;">${key}</td><td>${item.allData[key]}</td></tr>`;
+        
+        document.getElementById('mBody').innerHTML = html + '</table>';
+        document.getElementById('mFooter').innerHTML = item.location ? `<a href="${item.location}" target="_blank" class="btn-act"><i class="fas fa-map-marker-alt"></i> نەخشە</a>` : '';
+        document.getElementById('modal').style.display = 'block';
+    }
+
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+</script>
+</body>
+</html>
