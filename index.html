@@ -8,63 +8,23 @@
     <style>
         :root { --p: #2563eb; --s: #64748b; --bg: #f1f5f9; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 15px; }
-        
         .container { max-width: 800px; margin: auto; }
-
-        /* منطقة الإحصائيات - مرتبة وتظهر الكل */
-        .stats-container { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
-            gap: 10px; 
-            margin-bottom: 20px; 
-        }
-
-        .stat-card { 
-            background: white; 
-            padding: 12px 5px; 
-            border-radius: 15px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-            text-align: center; 
-            border-bottom: 4px solid var(--p);
-        }
-
+        .stats-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 12px 5px; border-radius: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; border-bottom: 4px solid var(--p); transition: 0.3s; }
         .stat-card h5 { margin: 0; color: var(--s); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .stat-card div { font-weight: bold; color: var(--p); font-size: 20px; margin-top: 5px; }
         .stat-card.zero { border-bottom-color: #cbd5e1; opacity: 0.7; }
         .stat-card.zero div { color: #94a3b8; }
-
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        
         .filter-group { display: flex; flex-direction: column; gap: 8px; }
         @media (min-width: 600px) { .filter-group { flex-direction: row; } }
-
         select, input, button { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 16px; box-sizing: border-box; }
         button { background: var(--p); color: white; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        
-        /* الزيارات بشكل عمودي متسلسل */
-        #results { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-        }
-
-        .visit-item { 
-            background: white; 
-            padding: 15px; 
-            border-radius: 15px; 
-            border-right: 6px solid var(--p); 
-            cursor: pointer; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.2s;
-        }
+        #results { display: flex; flex-direction: column; gap: 12px; }
+        .visit-item { background: white; padding: 15px; border-radius: 15px; border-right: 6px solid var(--p); cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
         .visit-item:hover { background: #f8fafc; transform: translateX(-5px); }
         .visit-info { flex-grow: 1; }
         .visit-time { color: var(--s); font-size: 13px; }
-
-        /* المودال */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.9); z-index: 1000; }
         .modal-content { background: white; width: 95%; max-width: 450px; margin: 30px auto; border-radius: 25px; padding: 20px; box-sizing: border-box; max-height: 85vh; overflow-y: auto; }
         .img-box { width: 100%; border-radius: 15px; margin-bottom: 15px; display: none; }
@@ -85,6 +45,7 @@
             <input type="date" id="sDate" onchange="loadStats()">
             <button onclick="search()">بگەڕێ <i class="fas fa-search"></i></button>
         </div>
+        <p id="autoUpdateText" style="font-size: 11px; color: gray; margin-top: 10px; text-align: center;">سیستمەکە هەموو ١٠ خولەکێک خۆکارانە نوێ دەبێتەوە</p>
     </div>
 
     <div id="loader" style="display:none; text-align:center; padding: 20px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--p)"></i></div>
@@ -104,91 +65,122 @@
 
 <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycby17rf-ZbAtTfbbPGxxUAkdc46DdsguQKuHdRw0YwlvsXqVLIP4_2FIgOiTqhKvoCGK/exec';
+    let lastFetchedData = []; // لتخزين البيانات محلياً وتسهيل عرض التفاصيل
 
     window.onload = () => {
         document.getElementById('sDate').valueAsDate = new Date();
         loadStats();
         
-        // تعديل هنا لمنع التكرار
+        // جلب قائمة المناديب عند التشغيل
         fetch(`${API_URL}?action=getSalesmen`)
             .then(r => r.json())
             .then(data => {
-                // استخدام Set لإزالة الأسماء المكررة تلقائياً
                 const uniqueSalesmen = [...new Set(data)];
-                
                 document.getElementById('smList').innerHTML = 
                     '<option value="">نوێنەرێک هەڵبژێرە</option>' + 
                     uniqueSalesmen.map(n => `<option value="${n}">${n}</option>`).join('');
             });
+
+        // إعداد التحديث التلقائي كل 10 دقائق
+        setInterval(() => {
+            loadStats();
+            if (document.getElementById('smList').value !== "") {
+                search(true); // تمرير true ليعرف النظام أنه تحديث خلفي
+            }
+        }, 10 * 60 * 1000);
     };
 
     function loadStats() {
         const dt = document.getElementById('sDate').value;
         const statsArea = document.getElementById('statsArea');
-        // عدم مسح المحتوى بالكامل لتجنب "القفزة" في التصميم، فقط إظهار حالة التحميل
         statsArea.style.opacity = "0.5";
         
-        fetch(`${API_URL}?action=getStats&date=${dt}`).then(r => r.json()).then(data => {
-            statsArea.style.opacity = "1";
-            statsArea.innerHTML = '';
-            for(let sm in data) {
-                let isZero = data[sm] === 0;
-                statsArea.innerHTML += `
-                    <div class="stat-card ${isZero ? 'zero' : ''}">
-                        <h5>${sm}</h5>
-                        <div>${data[sm]}</div>
-                    </div>`;
-            }
-        });
+        fetch(`${API_URL}?action=getStats&date=${dt}`)
+            .then(r => r.json())
+            .then(data => {
+                statsArea.style.opacity = "1";
+                statsArea.innerHTML = '';
+                for(let sm in data) {
+                    let isZero = data[sm] === 0;
+                    statsArea.innerHTML += `
+                        <div class="stat-card ${isZero ? 'zero' : ''}">
+                            <h5>${sm}</h5>
+                            <div>${data[sm]}</div>
+                        </div>`;
+                }
+            }).catch(e => console.error("Error loading stats:", e));
     }
 
-    async function search() {
+    async function search(isAutoUpdate = false) {
         const sm = document.getElementById('smList').value;
         const dt = document.getElementById('sDate').value;
         const resDiv = document.getElementById('results');
         const loader = document.getElementById('loader');
 
-        resDiv.innerHTML = '';
-        loader.style.display = 'block';
+        if (!isAutoUpdate) {
+            resDiv.innerHTML = '';
+            loader.style.display = 'block';
+        }
 
-        fetch(`${API_URL}?action=search&salesman=${encodeURIComponent(sm)}&date=${dt}`).then(r => r.json()).then(data => {
-            loader.style.display = 'none';
-            if(!data || data.length === 0) { 
-                resDiv.innerHTML = '<div class="card" style="text-align:center; color:gray;">هیچ چالاکییەک نەدۆزرایەوە</div>'; 
-                return; 
-            }
-            
-            // عرض النتائج بشكل عمودي متسلسل
-            data.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'visit-item';
-                div.onclick = () => showDetails(item);
-                div.innerHTML = `
-                    <div class="visit-info">
-                        <strong>${item.name}</strong><br>
-                        <small style="color:var(--s)">${item.type}</small>
-                    </div>
-                    <div class="visit-time">
-                        <i class="far fa-clock"></i> ${item.duration}
-                    </div>
-                `;
-                resDiv.appendChild(div);
+        fetch(`${API_URL}?action=search&salesman=${encodeURIComponent(sm)}&date=${dt}`)
+            .then(r => r.json())
+            .then(data => {
+                loader.style.display = 'none';
+                lastFetchedData = data; // حفظ البيانات للتمكن من فتح المودال
+
+                if(!data || data.length === 0) { 
+                    resDiv.innerHTML = '<div class="card" style="text-align:center; color:gray;">هیچ چالاکییەک نەدۆزرایەوە</div>'; 
+                    return; 
+                }
+                
+                let htmlContent = '';
+                data.forEach((item, index) => {
+                    htmlContent += `
+                        <div class="visit-item" onclick="showDetailsByIndex(${index})">
+                            <div class="visit-info">
+                                <strong>${item.name}</strong><br>
+                                <small style="color:var(--s)">${item.type}</small>
+                            </div>
+                            <div class="visit-time">
+                                <i class="far fa-clock"></i> ${item.duration}
+                            </div>
+                        </div>
+                    `;
+                });
+                resDiv.innerHTML = htmlContent;
+            }).catch(e => {
+                loader.style.display = 'none';
+                console.error("Search error:", e);
             });
-        });
     }
 
-    function showDetails(item) {
+    // وظيفة محسنة لفتح التفاصيل باستخدام الفهرس لتجنب مشاكل الرموز الخاصة
+    function showDetailsByIndex(index) {
+        const item = lastFetchedData[index];
+        if (!item) return;
+
         document.getElementById('mTitle').innerText = item.name;
         const img = document.getElementById('mImg');
+        
         if(item.photo) {
-            let fileId = item.photo.includes('id=') ? item.photo.split('id=')[1].split('&')[0] : item.photo.split('/d/')[1].split('/')[0];
+            let fileId = "";
+            if (item.photo.includes('id=')) {
+                fileId = item.photo.split('id=')[1].split('&')[0];
+            } else if (item.photo.includes('/d/')) {
+                fileId = item.photo.split('/d/')[1].split('/')[0];
+            }
             img.src = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
             img.style.display = 'block';
-        } else { img.style.display = 'none'; }
+        } else { 
+            img.style.display = 'none'; 
+        }
 
         let html = '<table class="data-table">';
-        for(let key in item.allData) if(item.allData[key] && !['Latitude','Longitude','Photo','location'].includes(key)) 
-            html += `<tr><td style="color:#64748b; font-weight:bold;">${key}</td><td>${item.allData[key]}</td></tr>`;
+        for(let key in item.allData) {
+            if(item.allData[key] && !['Latitude','Longitude','Photo','location'].includes(key)) {
+                html += `<tr><td style="color:#64748b; font-weight:bold;">${key}</td><td>${item.allData[key]}</td></tr>`;
+            }
+        }
         
         document.getElementById('mBody').innerHTML = html + '</table>';
         document.getElementById('mFooter').innerHTML = item.location ? `<a href="${item.location}" target="_blank" class="btn-act"><i class="fas fa-map-marker-alt"></i> نەخشە</a>` : '';
