@@ -1,496 +1,976 @@
 <!DOCTYPE html>
 <html dir="rtl" lang="ku">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سیستەمی نوێنەران</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --p: #2563eb; --s: #64748b; --bg: #f1f5f9; --green: #10b981; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 15px; }
-        .container { max-width: 800px; margin: auto; }
-        .stats-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        :root {
+            --p: #2563eb;
+            --s: #64748b;
+            --bg: #f1f5f9;
+            --green: #10b981;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
 
         .stat-card {
-            background: white; padding: 12px 5px; border-radius: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;
-            border-bottom: 4px solid var(--p); transition: 0.3s;
+            background: white;
+            padding: 12px 5px;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            border-bottom: 4px solid var(--p);
+            transition: 0.3s;
             cursor: pointer;
         }
-        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .stat-card.active-sm { border-bottom-color: #10b981; background: #f0fdf4; }
-        .stat-card h5 { margin: 0; color: var(--s); font-size: 12px; }
-        .stat-card div { font-weight: bold; color: var(--p); font-size: 20px; margin-top: 5px; }
-        .stat-card.zero { border-bottom-color: #cbd5e1; opacity: 0.7; }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card.active-sm {
+            border-bottom-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .stat-card h5 {
+            margin: 0;
+            color: var(--s);
+            font-size: 12px;
+        }
+
+        .stat-card div {
+            font-weight: bold;
+            color: var(--p);
+            font-size: 20px;
+            margin-top: 5px;
+        }
+
+        .stat-card.zero {
+            border-bottom-color: #cbd5e1;
+            opacity: 0.7;
+        }
 
         /* Report Section */
         .report-section {
-            background: white; border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
         }
+
         .report-header {
             background: linear-gradient(135deg, #1e40af, #2563eb);
-            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        .report-header h3 { margin: 0; color: white; font-size: 16px; }
-        .report-period-controls { display: flex; align-items: center; gap: 8px; }
-        .report-period-controls input[type=number] {
-            width: 60px; padding: 6px 8px; border-radius: 10px; border: none;
-            font-size: 14px; text-align: center; background: rgba(255,255,255,0.2);
-            color: white; font-weight: bold; outline: none;
-        }
-        .report-period-controls input[type=number]::placeholder { color: rgba(255,255,255,0.7); }
-        .report-period-controls span { color: rgba(255,255,255,0.9); font-size: 13px; }
-        .report-period-controls button {
-            background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
-            color: white; padding: 6px 12px; border-radius: 10px; cursor: pointer;
-            font-size: 12px; transition: 0.2s;
-        }
-        .report-period-controls button:hover { background: rgba(255,255,255,0.35); }
 
-        .report-body { padding: 15px; }
-        .report-sm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+        .report-header h3 {
+            margin: 0;
+            color: white;
+            font-size: 16px;
+        }
+
+        .report-period-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .report-period-controls input[type=number] {
+            width: 60px;
+            padding: 6px 8px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .report-period-controls input[type=number]::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .report-period-controls span {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+        }
+
+        .report-period-controls button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .report-period-controls button:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        .new-only-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .new-only-toggle:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .new-only-toggle input[type=checkbox] {
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            accent-color: #10b981;
+        }
+
+        .new-only-toggle.active {
+            background: rgba(16, 185, 129, 0.35);
+            border-color: #10b981;
+        }
+
+        .report-body {
+            padding: 15px;
+        }
+
+        .report-sm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+        }
 
         .report-sm-card {
-            background: #f8fafc; border-radius: 14px; padding: 14px 10px;
-            text-align: center; cursor: pointer; transition: 0.25s;
-            border: 2px solid transparent; position: relative; overflow: hidden;
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.25s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
-        .report-sm-card:hover { background: #eff6ff; border-color: var(--p); transform: translateY(-2px); }
-        .report-sm-card .sm-name { font-size: 13px; color: #1e293b; font-weight: 600; margin-bottom: 5px; }
+
+        .report-sm-card:hover {
+            background: #eff6ff;
+            border-color: var(--p);
+            transform: translateY(-2px);
+        }
+
+        .report-sm-card .sm-name {
+            font-size: 13px;
+            color: #1e293b;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
         .report-sm-card .sm-count {
-            font-size: 22px; font-weight: bold; color: var(--p);
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--p);
         }
-        .report-sm-card .sm-label { font-size: 11px; color: var(--s); margin-top: 2px; }
-        .report-sm-card.zero-rep { opacity: 0.5; }
-        .report-sm-card .badge {
-            position: absolute; top: 6px; left: 6px;
-            background: var(--green); color: white; font-size: 10px;
-            padding: 2px 6px; border-radius: 8px; font-weight: bold;
+
+        .report-sm-card .sm-label {
+            font-size: 11px;
+            color: var(--s);
+            margin-top: 2px;
+        }
+
+        .report-sm-card.zero-rep {
+            opacity: 0.5;
+        }
+
+        .report-sm-card .badge-top {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: var(--green);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .report-sm-card .badge-new {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: var(--p);
+            color: white;
+            font-size: 9px;
+            padding: 2px 5px;
+            border-radius: 6px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
 
         /* Daily section */
-        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .filter-group { display: flex; flex-direction: column; gap: 8px; align-items: center; }
-        input[type=date] { width: 100%; max-width: 300px; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 16px; text-align: center; outline: none; }
-        input[type=date]:focus { border-color: var(--p); }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        input[type=date] {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+        }
+
+        input[type=date]:focus {
+            border-color: var(--p);
+        }
 
         #loader {
-            display: none; text-align: center; padding: 40px; background: white;
-            border-radius: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
-        .loader-text { color: var(--p); font-weight: bold; margin-top: 15px; display: block; font-size: 18px; }
 
-        #results { display: flex; flex-direction: column; gap: 5px; }
+        .loader-text {
+            color: var(--p);
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+            font-size: 18px;
+        }
 
-        .visit-item { background: white; padding: 15px; border-radius: 15px; border-right: 6px solid var(--p); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; z-index: 2; position: relative;}
-        .visit-item:hover { background: #f8fafc; transform: translateX(-5px); }
+        #results {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .visit-item {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            border-right: 6px solid var(--p);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+            z-index: 2;
+            position: relative;
+        }
+
+        .visit-item:hover {
+            background: #f8fafc;
+            transform: translateX(-5px);
+        }
 
         .timeline-header {
-            background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 15px 20px;
-            border-radius: 15px; display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
         }
-        .timeline-header div { text-align: center; }
-        .timeline-header span { display: block; font-size: 12px; opacity: 0.9; margin-bottom: 5px;}
-        .timeline-header strong { font-size: 18px; letter-spacing: 1px;}
 
-        .visit-divider {
-            display: flex; align-items: center; justify-content: center;
-            padding: 10px 0; position: relative; margin: 0 15px;
-        }
-        .visit-divider::before {
-            content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
-            width: 2px; background: #cbd5e1; z-index: 1; border-left: 2px dashed #94a3b8;
-        }
-        .divider-badge {
-            background: white; border: 1px solid #e2e8f0; color: var(--s);
-            padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: bold;
-            z-index: 2; display: flex; gap: 15px; align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .divider-badge i { color: #f59e0b; }
-        .divider-badge .fa-car { color: var(--p); }
-
-        /* Modals */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.9); z-index: 1000; overflow-y: auto; }
-        .modal-content { background: white; width: 95%; max-width: 450px; margin: 30px auto; border-radius: 25px; padding: 20px; max-height: 85vh; overflow-y: auto; }
-        .img-box { width: 100%; border-radius: 15px; margin-bottom: 15px; display: none; }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table td { padding: 10px 5px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        .btn-act { flex: 1; padding: 12px; text-align: center; border-radius: 12px; color: white; text-decoration: none; font-weight: bold; background:#10b981; }
-        .btn-close { background: #f1f5f9; color: #1e293b; width: 100%; border: none; padding: 12px; border-radius: 12px; margin-top: 10px; font-weight: bold; cursor: pointer; font-family: inherit; font-size: 15px; }
-
-        /* Report Modal */
-        #reportModal .modal-content { max-width: 500px; }
-        .report-modal-header {
-            background: linear-gradient(135deg, #1e40af, #2563eb);
-            margin: -20px -20px 20px -20px; padding: 20px;
-            border-radius: 25px 25px 0 0; color: white; text-align: center;
-        }
-        .report-modal-header h3 { margin: 0 0 5px 0; font-size: 18px; }
-        .report-modal-header p { margin: 0; font-size: 13px; opacity: 0.85; }
-
-        .client-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 10px; border-bottom: 1px solid #f1f5f9;
-            transition: background 0.15s;
-        }
-        .client-row:hover { background: #f8fafc; border-radius: 10px; }
-        .client-row:last-child { border-bottom: none; }
-        .client-name { font-size: 14px; color: #1e293b; font-weight: 500; }
-        .client-visits {
-            background: #eff6ff; color: var(--p); font-weight: bold;
-            padding: 4px 12px; border-radius: 20px; font-size: 14px; min-width: 40px; text-align: center;
-        }
-        .client-visits.high { background: #f0fdf4; color: var(--green); }
-        .report-summary {
-            display: flex; gap: 10px; margin-bottom: 15px;
-        }
-        .summary-box {
-            flex: 1; background: #f8fafc; border-radius: 12px; padding: 12px;
+        .timeline-header div {
             text-align: center;
         }
-        .summary-box .val { font-size: 22px; font-weight: bold; color: var(--p); }
-        .summary-box .lbl { font-size: 11px; color: var(--s); margin-top: 3px; }
-        .period-inputs { display: flex; gap: 8px; margin-bottom: 15px; align-items: center; }
-        .period-inputs input { flex: 1; padding: 8px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 13px; outline: none; text-align: center; }
-        .period-inputs button { padding: 8px 14px; background: var(--p); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 13px; font-family: inherit; }
 
-        .loading-report { text-align: center; padding: 30px; color: var(--s); }
+        .timeline-header span {
+            display: block;
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .timeline-header strong {
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        .visit-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            position: relative;
+            margin: 0 15px;
+        }
+
+        .visit-divider::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #cbd5e1;
+            z-index: 1;
+            border-left: 2px dashed #94a3b8;
+        }
+
+        .divider-badge {
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: var(--s);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            z-index: 2;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .divider-badge i {
+            color: #f59e0b;
+        }
+
+        .divider-badge .fa-car {
+            color: var(--p);
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            width: 95%;
+            max-width: 450px;
+            margin: 30px auto;
+            border-radius: 25px;
+            padding: 20px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .img-box {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table td {
+            padding: 10px 5px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+        }
+
+        .btn-act {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            background: #10b981;
+        }
+
+        .btn-close {
+            background: #f1f5f9;
+            color: #1e293b;
+            width: 100%;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 15px;
+        }
+
+        /* Report Modal */
+        #reportModal .modal-content {
+            max-width: 500px;
+        }
+
+        .report-modal-header {
+            background: linear-gradient(135deg, #1e40af, #2563eb);
+            margin: -20px -20px 20px -20px;
+            padding: 20px;
+            border-radius: 25px 25px 0 0;
+            color: white;
+            text-align: center;
+        }
+
+        .report-modal-header h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+        }
+
+        .report-modal-header p {
+            margin: 0;
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .client-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 10px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.15s;
+        }
+
+        .client-row:hover {
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .client-row:last-child {
+            border-bottom: none;
+        }
+
+        .client-name {
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .client-visits {
+            background: #eff6ff;
+            color: var(--p);
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .client-visits.high {
+            background: #f0fdf4;
+            color: var(--green);
+        }
+
+        .report-summary {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .summary-box {
+            flex: 1;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .summary-box .val {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--p);
+        }
+
+        .summary-box .lbl {
+            font-size: 11px;
+            color: var(--s);
+            margin-top: 3px;
+        }
+
+        .period-inputs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .period-inputs input {
+            flex: 1;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-size: 13px;
+            outline: none;
+            text-align: center;
+        }
+
+        .period-inputs button {
+            padding: 8px 14px;
+            background: var(--p);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        .loading-report {
+            text-align: center;
+            padding: 30px;
+            color: var(--s);
+        }
+
+        .new-badge-inline {
+            display: inline-block;
+            background: var(--p);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 8px;
+            vertical-align: middle;
+            margin-right: 6px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <!-- ===== قسم تقرير 30 يوم ===== -->
-    <div class="report-section">
-        <div class="report-header">
-            <h3><i class="fas fa-chart-bar" style="margin-left:8px;"></i>ڕاپۆرتی نوێنەران</h3>
-            <div class="report-period-controls">
-                <input type="number" id="reportDays" value="30" min="1" max="365" placeholder="30">
-                <span>ڕۆژ</span>
-                <button onclick="loadReportStats()"><i class="fas fa-sync-alt"></i></button>
+        <!-- ===== قسم تقرير 30 يوم ===== -->
+        <div class="report-section">
+            <div class="report-header">
+                <h3><i class="fas fa-chart-bar" style="margin-left:8px;"></i>ڕاپۆرتی نوێنەران</h3>
+                <div class="report-period-controls">
+                    <input type="number" id="reportDays" value="30" min="1" max="365" placeholder="30">
+                    <span>ڕۆژ</span>
+                    <button onclick="loadReportStats()"><i class="fas fa-sync-alt"></i></button>
+                    <label class="new-only-toggle" id="newOnlyLabel">
+                        <input type="checkbox" id="newOnlyCheck" onchange="onNewOnlyChange()">
+                        کڕیاری نوێ
+                    </label>
+                </div>
             </div>
-        </div>
-        <div class="report-body">
-            <div id="reportSmGrid" class="report-sm-grid">
-                <div class="loading-report"><i class="fas fa-spinner fa-spin"></i> باردەکرێت...</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== قسم اليومي ===== -->
-    <div class="card">
-        <div class="filter-group">
-            <label style="font-size: 14px; color: var(--s);">بەروار هەڵبژێرە:</label>
-            <input type="date" id="sDate" onchange="loadStats()">
-        </div>
-    </div>
-
-    <div id="statsArea" class="stats-container"></div>
-
-    <div id="loader">
-        <i class="fas fa-spinner fa-spin fa-3x" style="color:var(--p)"></i>
-        <span id="loaderLabel" class="loader-text">باردەکرێت...</span>
-    </div>
-
-    <div id="results"></div>
-</div>
-
-<!-- Modal تفاصيل الزيارة اليومية -->
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <h3 id="mTitle" style="color:var(--p); margin-top:0; text-align:center;"></h3>
-        <img id="mImg" class="img-box" src="">
-        <div id="mBody"></div>
-        <div class="btns" id="mFooter" style="margin-top:15px; display:flex;"></div>
-        <button class="btn-close" onclick="closeModal()">داخستن</button>
-    </div>
-</div>
-
-<!-- Modal تقرير المندوب -->
-<div id="reportModal" class="modal">
-    <div class="modal-content">
-        <div class="report-modal-header">
-            <h3 id="rmTitle">-</h3>
-            <p id="rmPeriod">-</p>
-        </div>
-
-        <!-- تغيير المدة من داخل النافذة -->
-        <div class="period-inputs">
-            <input type="date" id="rmStartDate">
-            <span style="color:var(--s)">→</span>
-            <input type="date" id="rmEndDate">
-            <button onclick="refreshReportModal()"><i class="fas fa-search"></i></button>
-        </div>
-
-        <!-- ملخص -->
-        <div class="report-summary">
-            <div class="summary-box">
-                <div class="val" id="rmTotalVisits">0</div>
-                <div class="lbl">کۆی سەردانەکان</div>
-            </div>
-            <div class="summary-box">
-                <div class="val" id="rmTotalClients">0</div>
-                <div class="lbl">ژمارەی کڕیارەکان</div>
+            <div class="report-body">
+                <div id="reportSmGrid" class="report-sm-grid">
+                    <div class="loading-report"><i class="fas fa-spinner fa-spin"></i> باردەکرێت...</div>
+                </div>
             </div>
         </div>
 
-        <div id="rmBody"><div class="loading-report"><i class="fas fa-spinner fa-spin"></i></div></div>
-        <button class="btn-close" onclick="closeReportModal()">داخستن</button>
+        <!-- ===== قسم اليومي ===== -->
+        <div class="card">
+            <div class="filter-group">
+                <label style="font-size: 14px; color: var(--s);">بەروار هەڵبژێرە:</label>
+                <input type="date" id="sDate" onchange="loadStats()">
+            </div>
+        </div>
+
+        <div id="statsArea" class="stats-container"></div>
+
+        <div id="loader">
+            <i class="fas fa-spinner fa-spin fa-3x" style="color:var(--p)"></i>
+            <span id="loaderLabel" class="loader-text">باردەکرێت...</span>
+        </div>
+
+        <div id="results"></div>
     </div>
-</div>
 
-<script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzw1Tr3vD9JqN48Lwl3AcndDJrYE4a8M4tRqaFTjHdK5q0f3ABnAcygmBvPfpkUCs9-/exec';
-    let lastFetchedData = [];
-    let selectedSalesman = "";
-    let currentReportSalesman = "";
+    <!-- Modal تفاصيل الزيارة اليومية -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="mTitle" style="color:var(--p); margin-top:0; text-align:center;"></h3>
+            <img id="mImg" class="img-box" src="">
+            <div id="mBody"></div>
+            <div class="btns" id="mFooter" style="margin-top:15px; display:flex;"></div>
+            <button class="btn-close" onclick="closeModal()">داخستن</button>
+        </div>
+    </div>
 
-    // ===== حساب تواريخ الفترة =====
-    function getPeriodDates(days) {
-        const end = new Date();
-        const start = new Date();
-        start.setDate(start.getDate() - (days - 1));
-        return {
-            start: start.toISOString().split('T')[0],
-            end: end.toISOString().split('T')[0]
-        };
-    }
+    <!-- Modal تقرير المندوب -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <div class="report-modal-header">
+                <h3 id="rmTitle">-</h3>
+                <p id="rmPeriod">-</p>
+            </div>
 
-    function formatDateAr(dateStr) {
-        const d = new Date(dateStr);
-        return d.toLocaleDateString('ar', { day: 'numeric', month: 'short', year: 'numeric' });
-    }
+            <div class="period-inputs">
+                <input type="date" id="rmStartDate">
+                <span style="color:var(--s)">→</span>
+                <input type="date" id="rmEndDate">
+                <button onclick="refreshReportModal()"><i class="fas fa-search"></i></button>
+            </div>
 
-    // ===== تحميل إحصائيات التقرير =====
-    function loadReportStats() {
-        const days = parseInt(document.getElementById('reportDays').value) || 30;
-        const { start, end } = getPeriodDates(days);
-        const grid = document.getElementById('reportSmGrid');
-        grid.innerHTML = '<div class="loading-report"><i class="fas fa-spinner fa-spin"></i> باردەکرێت...</div>';
+            <div class="report-summary">
+                <div class="summary-box">
+                    <div class="val" id="rmTotalVisits">0</div>
+                    <div class="lbl">کۆی سەردانەکان</div>
+                </div>
+                <div class="summary-box">
+                    <div class="val" id="rmTotalClients">0</div>
+                    <div class="lbl">ژمارەی کڕیارەکان</div>
+                </div>
+            </div>
 
-        fetch(`${API_URL}?action=getReportStats&startDate=${start}&endDate=${end}`)
-            .then(r => r.json())
-            .then(data => {
-                grid.innerHTML = '';
-                // ترتيب تنازلي حسب العدد
-                const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
-                sorted.forEach(([name, count]) => {
-                    const isZero = count === 0;
-                    const isTop = !isZero && count === sorted.find(x => x[1] > 0)?.[1];
-                    grid.innerHTML += `
+            <div id="rmBody">
+                <div class="loading-report"><i class="fas fa-spinner fa-spin"></i></div>
+            </div>
+            <button class="btn-close" onclick="closeReportModal()">داخستن</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycby-NC7pP4Misc1Wm2uYCESO-XqviO2LXlQ8w-YgUbQBfbjjzOZao5Yas7P5oMqMd4g_/exec';
+        let lastFetchedData = [];
+        let selectedSalesman = "";
+        let currentReportSalesman = "";
+
+        // ===== حساب تواريخ الفترة =====
+        function getPeriodDates(days) {
+            const end = new Date();
+            const start = new Date();
+            start.setDate(start.getDate() - (days - 1));
+            return {
+                start: start.toISOString().split('T')[0],
+                end: end.toISOString().split('T')[0]
+            };
+        }
+
+        function formatDateAr(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('ar', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function isNewOnly() {
+            return document.getElementById('newOnlyCheck').checked;
+        }
+
+        function onNewOnlyChange() {
+            const label = document.getElementById('newOnlyLabel');
+            if (isNewOnly()) {
+                label.classList.add('active');
+            } else {
+                label.classList.remove('active');
+            }
+            loadReportStats();
+        }
+
+        // ===== تحميل إحصائيات التقرير =====
+        function loadReportStats() {
+            const days = parseInt(document.getElementById('reportDays').value) || 30;
+            const { start, end } = getPeriodDates(days);
+            const newOnly = isNewOnly();
+            const grid = document.getElementById('reportSmGrid');
+            grid.innerHTML = '<div class="loading-report"><i class="fas fa-spinner fa-spin"></i> باردەکرێت...</div>';
+
+            const url = `${API_URL}?action=getReportStats&startDate=${start}&endDate=${end}${newOnly ? '&sheetFilter=data' : ''}`;
+
+            fetch(url)
+                .then(r => r.json())
+                .then(data => {
+                    grid.innerHTML = '';
+                    const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+                    sorted.forEach(([name, count]) => {
+                        const isZero = count === 0;
+                        const isTop = !isZero && count === sorted.find(x => x[1] > 0)?.[1];
+                        grid.innerHTML += `
                         <div class="report-sm-card ${isZero ? 'zero-rep' : ''}" onclick="openReportModal('${name}')">
-                            ${isTop ? '<span class="badge"><i class="fas fa-star"></i></span>' : ''}
+                            ${isTop ? '<span class="badge-top"><i class="fas fa-star"></i></span>' : ''}
+                            ${newOnly ? '<span class="badge-new">NEW</span>' : ''}
                             <div class="sm-name">${name}</div>
                             <div class="sm-count">${count}</div>
                             <div class="sm-label">سەردان</div>
                         </div>`;
+                    });
+                }).catch(e => {
+                    grid.innerHTML = '<div class="loading-report" style="color:red;">هەڵە ڕوویدا</div>';
+                    console.error(e);
                 });
-            }).catch(e => {
-                grid.innerHTML = '<div class="loading-report" style="color:red;">هەڵە ڕوویدا</div>';
-                console.error(e);
-            });
-    }
+        }
 
-    // ===== فتح نافذة تقرير مندوب =====
-    function openReportModal(smName) {
-        currentReportSalesman = smName;
-        const days = parseInt(document.getElementById('reportDays').value) || 30;
-        const { start, end } = getPeriodDates(days);
+        // ===== فتح نافذة تقرير مندوب =====
+        function openReportModal(smName) {
+            currentReportSalesman = smName;
+            const days = parseInt(document.getElementById('reportDays').value) || 30;
+            const { start, end } = getPeriodDates(days);
+            const newOnly = isNewOnly();
 
-        document.getElementById('rmStartDate').value = start;
-        document.getElementById('rmEndDate').value = end;
-        document.getElementById('rmTitle').innerText = smName;
-        document.getElementById('rmPeriod').innerText = `${formatDateAr(start)} → ${formatDateAr(end)}`;
-        document.getElementById('rmBody').innerHTML = '<div class="loading-report"><i class="fas fa-spinner fa-spin"></i></div>';
-        document.getElementById('rmTotalVisits').innerText = '-';
-        document.getElementById('rmTotalClients').innerText = '-';
-        document.getElementById('reportModal').style.display = 'block';
+            document.getElementById('rmStartDate').value = start;
+            document.getElementById('rmEndDate').value = end;
+            document.getElementById('rmTitle').innerHTML = smName + (newOnly ? ' <span class="new-badge-inline">NEW</span>' : '');
+            document.getElementById('rmPeriod').innerText = `${formatDateAr(start)} → ${formatDateAr(end)}`;
+            document.getElementById('rmBody').innerHTML = '<div class="loading-report"><i class="fas fa-spinner fa-spin"></i></div>';
+            document.getElementById('rmTotalVisits').innerText = '-';
+            document.getElementById('rmTotalClients').innerText = '-';
+            document.getElementById('reportModal').style.display = 'block';
 
-        fetchReportData(smName, start, end);
-    }
+            fetchReportData(smName, start, end);
+        }
 
-    function refreshReportModal() {
-        const start = document.getElementById('rmStartDate').value;
-        const end = document.getElementById('rmEndDate').value;
-        if (!start || !end) return;
-        document.getElementById('rmPeriod').innerText = `${formatDateAr(start)} → ${formatDateAr(end)}`;
-        document.getElementById('rmBody').innerHTML = '<div class="loading-report"><i class="fas fa-spinner fa-spin"></i></div>';
-        fetchReportData(currentReportSalesman, start, end);
-    }
+        function refreshReportModal() {
+            const start = document.getElementById('rmStartDate').value;
+            const end = document.getElementById('rmEndDate').value;
+            if (!start || !end) return;
+            const newOnly = isNewOnly();
+            document.getElementById('rmTitle').innerHTML = currentReportSalesman + (newOnly ? ' <span class="new-badge-inline">NEW</span>' : '');
+            document.getElementById('rmPeriod').innerText = `${formatDateAr(start)} → ${formatDateAr(end)}`;
+            document.getElementById('rmBody').innerHTML = '<div class="loading-report"><i class="fas fa-spinner fa-spin"></i></div>';
+            fetchReportData(currentReportSalesman, start, end);
+        }
 
-    function fetchReportData(smName, start, end) {
-        fetch(`${API_URL}?action=getReport&salesman=${encodeURIComponent(smName)}&startDate=${start}&endDate=${end}`)
-            .then(r => r.json())
-            .then(data => {
-                const totalVisits = data.reduce((s, x) => s + x.visits, 0);
-                document.getElementById('rmTotalVisits').innerText = totalVisits;
-                document.getElementById('rmTotalClients').innerText = data.length;
+        function fetchReportData(smName, start, end) {
+            const newOnly = isNewOnly();
+            const url = `${API_URL}?action=getReport&salesman=${encodeURIComponent(smName)}&startDate=${start}&endDate=${end}${newOnly ? '&sheetFilter=data' : ''}`;
 
-                if (data.length === 0) {
-                    document.getElementById('rmBody').innerHTML = '<div class="loading-report">هیچ سەردانێک نەدۆزرایەوە</div>';
-                    return;
-                }
+            fetch(url)
+                .then(r => r.json())
+                .then(data => {
+                    const totalVisits = data.reduce((s, x) => s + x.visits, 0);
+                    document.getElementById('rmTotalVisits').innerText = totalVisits;
+                    document.getElementById('rmTotalClients').innerText = data.length;
 
-                const maxVisits = data[0].visits;
-                let html = '';
-                data.forEach((item, idx) => {
-                    const isHigh = item.visits >= maxVisits * 0.6;
-                    html += `
+                    if (data.length === 0) {
+                        document.getElementById('rmBody').innerHTML = '<div class="loading-report">هیچ سەردانێک نەدۆزرایەوە</div>';
+                        return;
+                    }
+
+                    const maxVisits = data[0].visits;
+                    let html = '';
+                    data.forEach((item, idx) => {
+                        const isHigh = item.visits >= maxVisits * 0.6;
+                        html += `
                         <div class="client-row">
-                            <div>
-                                <div class="client-name">${idx + 1}. ${item.client}</div>
-                            </div>
+                            <div><div class="client-name">${idx + 1}. ${item.client}</div></div>
                             <div class="client-visits ${isHigh ? 'high' : ''}">${item.visits}</div>
                         </div>`;
+                    });
+                    document.getElementById('rmBody').innerHTML = html;
+                }).catch(e => {
+                    document.getElementById('rmBody').innerHTML = '<div class="loading-report" style="color:red;">هەڵە ڕوویدا</div>';
+                    console.error(e);
                 });
-                document.getElementById('rmBody').innerHTML = html;
-            }).catch(e => {
-                document.getElementById('rmBody').innerHTML = '<div class="loading-report" style="color:red;">هەڵە ڕوویدا</div>';
-                console.error(e);
-            });
-    }
+        }
 
-    function closeReportModal() { document.getElementById('reportModal').style.display = 'none'; }
+        function closeReportModal() { document.getElementById('reportModal').style.display = 'none'; }
 
-    // ===== القسم اليومي (كود أصلي) =====
-    window.onload = () => {
-        document.getElementById('sDate').valueAsDate = new Date();
-        loadStats(true);
-        loadReportStats();
-
-        setInterval(() => {
-            loadStats(false);
+        // ===== القسم اليومي =====
+        window.onload = () => {
+            document.getElementById('sDate').valueAsDate = new Date();
+            loadStats(true);
             loadReportStats();
-            if (selectedSalesman !== "") search(selectedSalesman, true);
-        }, 10 * 60 * 1000);
-    };
 
-    function toggleLoader(show, text = "باردەکرێت...") {
-        const loader = document.getElementById('loader');
-        document.getElementById('loaderLabel').innerText = text;
-        loader.style.display = show ? 'block' : 'none';
-    }
+            setInterval(() => {
+                loadStats(false);
+                loadReportStats();
+                if (selectedSalesman !== "") search(selectedSalesman, true);
+            }, 10 * 60 * 1000);
+        };
 
-    function loadStats(isInitial = false) {
-        const dt = document.getElementById('sDate').value;
-        const statsArea = document.getElementById('statsArea');
-        if(isInitial) { toggleLoader(true, "نوێنەرەکان باردەکرێن..."); statsArea.innerHTML = ''; }
-        statsArea.style.opacity = "0.5";
-        fetch(`${API_URL}?action=getStats&date=${dt}`)
-            .then(r => r.json())
-            .then(data => {
-                statsArea.style.opacity = "1";
-                toggleLoader(false);
-                statsArea.innerHTML = '';
-                for(let sm in data) {
-                    let isZero = data[sm] === 0;
-                    statsArea.innerHTML += `
+        function toggleLoader(show, text = "باردەکرێت...") {
+            const loader = document.getElementById('loader');
+            document.getElementById('loaderLabel').innerText = text;
+            loader.style.display = show ? 'block' : 'none';
+        }
+
+        function loadStats(isInitial = false) {
+            const dt = document.getElementById('sDate').value;
+            const statsArea = document.getElementById('statsArea');
+            if (isInitial) { toggleLoader(true, "نوێنەرەکان باردەکرێن..."); statsArea.innerHTML = ''; }
+            statsArea.style.opacity = "0.5";
+            fetch(`${API_URL}?action=getStats&date=${dt}`)
+                .then(r => r.json())
+                .then(data => {
+                    statsArea.style.opacity = "1";
+                    toggleLoader(false);
+                    statsArea.innerHTML = '';
+                    for (let sm in data) {
+                        let isZero = data[sm] === 0;
+                        statsArea.innerHTML += `
                         <div class="stat-card ${isZero ? 'zero' : ''} ${sm === selectedSalesman ? 'active-sm' : ''}"
                              onclick="selectAndSearch('${sm}')">
                             <h5>${sm}</h5>
                             <div>${data[sm]}</div>
                         </div>`;
-                }
-            }).catch(e => { toggleLoader(false); console.error(e); });
-    }
-
-    function selectAndSearch(smName) {
-        selectedSalesman = smName;
-        document.querySelectorAll('.stat-card').forEach(card => {
-            card.classList.remove('active-sm');
-            if(card.querySelector('h5').innerText === smName) card.classList.add('active-sm');
-        });
-        search(smName);
-    }
-
-    function getDistanceInKm(lat1, lon1, lat2, lon2) {
-        lat1=parseFloat(lat1); lon1=parseFloat(lon1); lat2=parseFloat(lat2); lon2=parseFloat(lon2);
-        if(isNaN(lat1)||isNaN(lon1)||isNaN(lat2)||isNaN(lon2)) return null;
-        const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
-        const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-        return (R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(2);
-    }
-
-    function parseDurationToMinutes(d) {
-        if(!d) return 0;
-        let s=String(d).trim();
-        if(s.includes(':')) { let p=s.split(':'); return p.length===3?parseInt(p[0])*60+parseInt(p[1]):parseInt(p[0])*60+parseInt(p[1]); }
-        return parseFloat(s)||0;
-    }
-
-    function getVisitDateObj(item) {
-        for(let k of ['Timestamp','timestamp','Date','date','التاريخ','الوقت','كات','کات']) {
-            if(item[k]) return new Date(item[k]);
-            if(item.allData&&item.allData[k]) return new Date(item.allData[k]);
-        }
-        return new Date(0);
-    }
-
-    function formatTime(d) {
-        if(!d||isNaN(d.getTime())||d.getTime()===0) return "--:--";
-        return d.toLocaleTimeString('ku',{hour:'2-digit',minute:'2-digit'});
-    }
-
-    async function search(sm, isAutoUpdate=false) {
-        const dt = document.getElementById('sDate').value;
-        const resDiv = document.getElementById('results');
-        if(!isAutoUpdate) { resDiv.innerHTML=''; toggleLoader(true, `گەڕان بۆ چالاکییەکانی (${sm})...`); }
-
-        fetch(`${API_URL}?action=search&salesman=${encodeURIComponent(sm)}&date=${dt}`)
-            .then(r=>r.json())
-            .then(data => {
-                toggleLoader(false);
-                if(!data||data.length===0) { resDiv.innerHTML=`<div class="card" style="text-align:center;color:gray;">هیچ چالاکییەک بۆ ( ${sm} ) نەدۆزرایەوە</div>`; lastFetchedData=[]; return; }
-                data.sort((a,b)=>getVisitDateObj(a).getTime()-getVisitDateObj(b).getTime());
-                lastFetchedData=data;
-                let firstVisit=data[0], lastVisit=data[data.length-1];
-                let firstEnd=getVisitDateObj(firstVisit);
-                let globalStart=new Date(firstEnd.getTime()-parseDurationToMinutes(firstVisit.duration)*60000);
-                let globalEnd=getVisitDateObj(lastVisit);
-                let html=`<div class="timeline-header"><div><span>دەستپێکردن</span><strong>${formatTime(globalStart)}</strong></div><div><i class="fas fa-route fa-2x"></i></div><div><span>کۆتایی</span><strong>${formatTime(globalEnd)}</strong></div></div><h4 style="text-align:center;color:var(--p);margin-bottom:15px;">چالاکییەکانی: ${sm}</h4>`;
-                data.forEach((item,index)=>{
-                    html+=`<div class="visit-item" onclick="showDetailsByIndex(${index})"><div><strong>${item.name}</strong><br><small style="color:var(--s)">${item.type}</small></div><div><i class="far fa-clock"></i> ${item.duration}</div></div>`;
-                    if(index<data.length-1) {
-                        let ni=data[index+1];
-                        let dist=getDistanceInKm(item.allData['Latitude'],item.allData['Longitude'],ni.allData['Latitude'],ni.allData['Longitude']);
-                        let distText=dist?`${dist} KM`:'نەزانراو';
-                        let cEnd=getVisitDateObj(item), nEnd=getVisitDateObj(ni);
-                        let nStart=new Date(nEnd.getTime()-parseDurationToMinutes(ni.duration)*60000);
-                        let gapMin=Math.max(0,Math.floor((nStart.getTime()-cEnd.getTime())/60000));
-                        let gapText=gapMin>=60?`${Math.floor(gapMin/60)}h ${gapMin%60}m`:`${gapMin}m`;
-                        html+=`<div class="visit-divider"><div class="divider-badge"><span><i class="fas fa-car"></i> ${distText}</span><span><i class="fas fa-hourglass-half"></i> ${gapText}</span></div></div>`;
                     }
-                });
-                resDiv.innerHTML=html;
-            }).catch(e=>{ toggleLoader(false); console.error(e); });
-    }
-
-    function showDetailsByIndex(index) {
-        const item=lastFetchedData[index]; if(!item) return;
-        document.getElementById('mTitle').innerText=item.name;
-        const img=document.getElementById('mImg');
-        if(item.photo) {
-            let fid="";
-            if(item.photo.includes('id=')) fid=item.photo.split('id=')[1].split('&')[0];
-            else if(item.photo.includes('/d/')) fid=item.photo.split('/d/')[1].split('/')[0];
-            img.src=`https://drive.google.com/thumbnail?id=${fid}&sz=w1000`;
-            img.style.display='block';
-        } else { img.style.display='none'; }
-        let html='<table class="data-table">';
-        for(let key in item.allData) {
-            if(item.allData[key]&&!['Latitude','Longitude','Photo','location'].includes(key))
-                html+=`<tr><td style="color:#64748b;font-weight:bold;">${key}</td><td>${item.allData[key]}</td></tr>`;
+                }).catch(e => { toggleLoader(false); console.error(e); });
         }
-        document.getElementById('mBody').innerHTML=html+'</table>';
-        document.getElementById('mFooter').innerHTML=item.location?`<a href="${item.location}" target="_blank" class="btn-act"><i class="fas fa-map-marker-alt"></i> نەخشە</a>`:'';
-        document.getElementById('modal').style.display='block';
-    }
 
-    function closeModal() { document.getElementById('modal').style.display='none'; }
-</script>
+        function selectAndSearch(smName) {
+            selectedSalesman = smName;
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.classList.remove('active-sm');
+                if (card.querySelector('h5').innerText === smName) card.classList.add('active-sm');
+            });
+            search(smName);
+        }
+
+        function getDistanceInKm(lat1, lon1, lat2, lon2) {
+            lat1 = parseFloat(lat1); lon1 = parseFloat(lon1); lat2 = parseFloat(lat2); lon2 = parseFloat(lon2);
+            if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) return null;
+            const R = 6371, dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+            return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))).toFixed(2);
+        }
+
+        function parseDurationToMinutes(d) {
+            if (!d) return 0;
+            let s = String(d).trim();
+            if (s.includes(':')) { let p = s.split(':'); return p.length === 3 ? parseInt(p[0]) * 60 + parseInt(p[1]) : parseInt(p[0]) * 60 + parseInt(p[1]); }
+            return parseFloat(s) || 0;
+        }
+
+        function getVisitDateObj(item) {
+            for (let k of ['Timestamp', 'timestamp', 'Date', 'date', 'التاريخ', 'الوقت', 'كات', 'کات']) {
+                if (item[k]) return new Date(item[k]);
+                if (item.allData && item.allData[k]) return new Date(item.allData[k]);
+            }
+            return new Date(0);
+        }
+
+        function formatTime(d) {
+            if (!d || isNaN(d.getTime()) || d.getTime() === 0) return "--:--";
+            return d.toLocaleTimeString('ku', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        async function search(sm, isAutoUpdate = false) {
+            const dt = document.getElementById('sDate').value;
+            const resDiv = document.getElementById('results');
+            if (!isAutoUpdate) { resDiv.innerHTML = ''; toggleLoader(true, `گەڕان بۆ چالاکییەکانی (${sm})...`); }
+
+            fetch(`${API_URL}?action=search&salesman=${encodeURIComponent(sm)}&date=${dt}`)
+                .then(r => r.json())
+                .then(data => {
+                    toggleLoader(false);
+                    if (!data || data.length === 0) {
+                        resDiv.innerHTML = `<div class="card" style="text-align:center;color:gray;">هیچ چالاکییەک بۆ ( ${sm} ) نەدۆزرایەوە</div>`;
+                        lastFetchedData = [];
+                        return;
+                    }
+                    data.sort((a, b) => getVisitDateObj(a).getTime() - getVisitDateObj(b).getTime());
+                    lastFetchedData = data;
+                    let firstVisit = data[0], lastVisit = data[data.length - 1];
+                    let firstEnd = getVisitDateObj(firstVisit);
+                    let globalStart = new Date(firstEnd.getTime() - parseDurationToMinutes(firstVisit.duration) * 60000);
+                    let globalEnd = getVisitDateObj(lastVisit);
+                    let html = `<div class="timeline-header"><div><span>دەستپێکردن</span><strong>${formatTime(globalStart)}</strong></div><div><i class="fas fa-route fa-2x"></i></div><div><span>کۆتایی</span><strong>${formatTime(globalEnd)}</strong></div></div><h4 style="text-align:center;color:var(--p);margin-bottom:15px;">چالاکییەکانی: ${sm}</h4>`;
+                    data.forEach((item, index) => {
+                        html += `<div class="visit-item" onclick="showDetailsByIndex(${index})"><div><strong>${item.name}</strong><br><small style="color:var(--s)">${item.type}</small></div><div><i class="far fa-clock"></i> ${item.duration}</div></div>`;
+                        if (index < data.length - 1) {
+                            let ni = data[index + 1];
+                            let dist = getDistanceInKm(item.allData['Latitude'], item.allData['Longitude'], ni.allData['Latitude'], ni.allData['Longitude']);
+                            let distText = dist ? `${dist} KM` : 'نەزانراو';
+                            let cEnd = getVisitDateObj(item), nEnd = getVisitDateObj(ni);
+                            let nStart = new Date(nEnd.getTime() - parseDurationToMinutes(ni.duration) * 60000);
+                            let gapMin = Math.max(0, Math.floor((nStart.getTime() - cEnd.getTime()) / 60000));
+                            let gapText = gapMin >= 60 ? `${Math.floor(gapMin / 60)}h ${gapMin % 60}m` : `${gapMin}m`;
+                            html += `<div class="visit-divider"><div class="divider-badge"><span><i class="fas fa-car"></i> ${distText}</span><span><i class="fas fa-hourglass-half"></i> ${gapText}</span></div></div>`;
+                        }
+                    });
+                    resDiv.innerHTML = html;
+                }).catch(e => { toggleLoader(false); console.error(e); });
+        }
+
+        function showDetailsByIndex(index) {
+            const item = lastFetchedData[index]; if (!item) return;
+            document.getElementById('mTitle').innerText = item.name;
+            const img = document.getElementById('mImg');
+            if (item.photo) {
+                let fid = "";
+                if (item.photo.includes('id=')) fid = item.photo.split('id=')[1].split('&')[0];
+                else if (item.photo.includes('/d/')) fid = item.photo.split('/d/')[1].split('/')[0];
+                img.src = `https://drive.google.com/thumbnail?id=${fid}&sz=w1000`;
+                img.style.display = 'block';
+            } else { img.style.display = 'none'; }
+            let html = '<table class="data-table">';
+            for (let key in item.allData) {
+                if (item.allData[key] && !['Latitude', 'Longitude', 'Photo', 'location'].includes(key))
+                    html += `<tr><td style="color:#64748b;font-weight:bold;">${key}</td><td>${item.allData[key]}</td></tr>`;
+            }
+            document.getElementById('mBody').innerHTML = html + '</table>';
+            document.getElementById('mFooter').innerHTML = item.location ? `<a href="${item.location}" target="_blank" class="btn-act"><i class="fas fa-map-marker-alt"></i> نەخشە</a>` : '';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        // إغلاق المودال عند الضغط على الخلفية
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>
