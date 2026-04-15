@@ -804,9 +804,17 @@
     }
 
     @keyframes sweepRightThenBack {
-      0% { transform: rotate(0deg); }
-      45% { transform: rotate(180deg); }
-      100% { transform: rotate(var(--target-deg)); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      45% {
+        transform: rotate(180deg);
+      }
+
+      100% {
+        transform: rotate(var(--target-deg));
+      }
     }
   </style>
 </head>
@@ -1199,37 +1207,76 @@
       const resDiv = document.getElementById('results');
       if (!isAutoUpdate) { resDiv.innerHTML = ''; toggleLoader(true, `گەڕان بۆ چالاکییەکانی (${sm})...`); }
 
-      fetch(`${API_URL}?action=search&salesman=${encodeURIComponent(sm)}&date=${dt}`)
-        .then(r => r.json())
-        .then(data => {
-          toggleLoader(false);
-          if (!data || data.length === 0) {
-            resDiv.innerHTML = `<div class="card" style="text-align:center;color:gray;">هیچ چالاکییەک بۆ ( ${sm} ) نەدۆزرایەوە</div>`;
-            lastFetchedData = [];
-            return;
+      try {
+        const [data, workStartTime] = await Promise.all([
+          fetch(`${API_URL}?action=search&salesman=${encodeURIComponent(sm)}&date=${dt}`).then(r => r.json()),
+          fetch(`${API_URL}?action=getStartTime&salesman=${encodeURIComponent(sm)}&date=${dt}`).then(r => r.json())
+        ]);
+
+        toggleLoader(false);
+        if (!data || data.length === 0) {
+          resDiv.innerHTML = `<div class="card" style="text-align:center;color:gray;">هیچ چالاکییەک بۆ ( ${sm} ) نەدۆزرایەوە</div>`;
+          lastFetchedData = [];
+          return;
+        }
+
+        data.sort((a, b) => getVisitDateObj(a).getTime() - getVisitDateObj(b).getTime());
+        lastFetchedData = data;
+
+        let firstVisit = data[0], lastVisit = data[data.length - 1];
+        let firstEnd = getVisitDateObj(firstVisit);
+        let globalStart = new Date(firstEnd.getTime() - parseDurationToMinutes(firstVisit.duration) * 60000);
+        let globalEnd = getVisitDateObj(lastVisit);
+
+        // بلوك وقت بدء الدوام (على يمين وقت بدء الزيارات)
+        const workStartBlock = workStartTime
+          ? `<div style="text-align:center;">
+           <span style="display:block; font-size:12px; opacity:0.85; margin-bottom:5px;">دەستپێکردنی كار</span>
+           <strong style="font-size:18px; letter-spacing:1px; color:#fbbf24;">${workStartTime}</strong>
+         </div>`
+          : '';
+
+        let html = `
+      <div class="timeline-header">
+        ${workStartBlock}
+        <div style="text-align:center;">
+          <span style="display:block; font-size:12px; opacity:0.9; margin-bottom:5px;">دەستپێکردنى سەردانەکان</span>
+          <strong style="font-size:18px; letter-spacing:1px;">${formatTime(globalStart)}</strong>
+        </div>
+        <div style="text-align:center;"><i class="fas fa-route fa-2x"></i></div>
+        <div style="text-align:center;">
+          <span style="display:block; font-size:12px; opacity:0.9; margin-bottom:5px;">کۆتایی</span>
+          <strong style="font-size:18px; letter-spacing:1px;">${formatTime(globalEnd)}</strong>
+        </div>
+      </div>
+      <h4 style="text-align:center;color:var(--p);margin-bottom:15px;">چالاکییەکانی: ${sm}</h4>`;
+
+        data.forEach((item, index) => {
+          html += `<div class="visit-item" onclick="showDetailsByIndex(${index})">
+        <div><strong>${item.name}</strong><br><small style="color:var(--s)">${item.type}</small></div>
+        <div><i class="far fa-clock"></i> ${item.duration}</div>
+      </div>`;
+          if (index < data.length - 1) {
+            let ni = data[index + 1];
+            let dist = getDistanceInKm(item.allData['Latitude'], item.allData['Longitude'], ni.allData['Latitude'], ni.allData['Longitude']);
+            let distText = dist ? `${dist} KM` : 'نەزانراو';
+            let cEnd = getVisitDateObj(item), nEnd = getVisitDateObj(ni);
+            let nStart = new Date(nEnd.getTime() - parseDurationToMinutes(ni.duration) * 60000);
+            let gapMin = Math.max(0, Math.floor((nStart.getTime() - cEnd.getTime()) / 60000));
+            let gapText = gapMin >= 60 ? `${Math.floor(gapMin / 60)}h ${gapMin % 60}m` : `${gapMin}m`;
+            html += `<div class="visit-divider"><div class="divider-badge">
+          <span><i class="fas fa-car"></i> ${distText}</span>
+          <span><i class="fas fa-hourglass-half"></i> ${gapText}</span>
+        </div></div>`;
           }
-          data.sort((a, b) => getVisitDateObj(a).getTime() - getVisitDateObj(b).getTime());
-          lastFetchedData = data;
-          let firstVisit = data[0], lastVisit = data[data.length - 1];
-          let firstEnd = getVisitDateObj(firstVisit);
-          let globalStart = new Date(firstEnd.getTime() - parseDurationToMinutes(firstVisit.duration) * 60000);
-          let globalEnd = getVisitDateObj(lastVisit);
-          let html = `<div class="timeline-header"><div><span>دەستپێکردن</span><strong>${formatTime(globalStart)}</strong></div><div><i class="fas fa-route fa-2x"></i></div><div><span>کۆتایی</span><strong>${formatTime(globalEnd)}</strong></div></div><h4 style="text-align:center;color:var(--p);margin-bottom:15px;">چالاکییەکانی: ${sm}</h4>`;
-          data.forEach((item, index) => {
-            html += `<div class="visit-item" onclick="showDetailsByIndex(${index})"><div><strong>${item.name}</strong><br><small style="color:var(--s)">${item.type}</small></div><div><i class="far fa-clock"></i> ${item.duration}</div></div>`;
-            if (index < data.length - 1) {
-              let ni = data[index + 1];
-              let dist = getDistanceInKm(item.allData['Latitude'], item.allData['Longitude'], ni.allData['Latitude'], ni.allData['Longitude']);
-              let distText = dist ? `${dist} KM` : 'نەزانراو';
-              let cEnd = getVisitDateObj(item), nEnd = getVisitDateObj(ni);
-              let nStart = new Date(nEnd.getTime() - parseDurationToMinutes(ni.duration) * 60000);
-              let gapMin = Math.max(0, Math.floor((nStart.getTime() - cEnd.getTime()) / 60000));
-              let gapText = gapMin >= 60 ? `${Math.floor(gapMin / 60)}h ${gapMin % 60}m` : `${gapMin}m`;
-              html += `<div class="visit-divider"><div class="divider-badge"><span><i class="fas fa-car"></i> ${distText}</span><span><i class="fas fa-hourglass-half"></i> ${gapText}</span></div></div>`;
-            }
-          });
-          resDiv.innerHTML = html;
-        }).catch(e => { toggleLoader(false); console.error(e); });
+        });
+
+        resDiv.innerHTML = html;
+
+      } catch (e) {
+        toggleLoader(false);
+        console.error(e);
+      }
     }
 
     function showDetailsByIndex(index) {
@@ -1243,9 +1290,32 @@
         img.src = `https://drive.google.com/thumbnail?id=${fid}&sz=w1000`;
         img.style.display = 'block';
       } else { img.style.display = 'none'; }
-      let html = '<table class="data-table">';
+      let html = '';
+
+      let visitDateObj = getVisitDateObj(item);
+      if (visitDateObj && visitDateObj.getTime() !== 0) {
+        const dateStr = visitDateObj.toLocaleDateString('en-GB');
+        const timeStr = formatTime(visitDateObj);
+
+        html += `
+        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+            <div style="background:#f8fafc; padding:12px; border-radius:12px; text-align:center; flex:1; border: 1px solid #e2e8f0;">
+                <i class="far fa-calendar-alt" style="color:var(--p); font-size:20px; margin-bottom:5px;"></i>
+                <div style="font-size:11px; color:var(--s); margin-bottom:2px;">بەروار</div>
+                <div style="font-weight:bold; color:#1e293b; font-size:14px; direction:ltr;">${dateStr}</div>
+            </div>
+            <div style="background:#f8fafc; padding:12px; border-radius:12px; text-align:center; flex:1; border: 1px solid #e2e8f0;">
+                <i class="far fa-clock" style="color:var(--p); font-size:20px; margin-bottom:5px;"></i>
+                <div style="font-size:11px; color:var(--s); margin-bottom:2px;">کات</div>
+                <div style="font-weight:bold; color:#1e293b; font-size:14px; direction:ltr;">${timeStr}</div>
+            </div>
+        </div>`;
+      }
+
+      html += '<table class="data-table">';
+      const hiddenKeys = ['Latitude', 'Longitude', 'Photo', 'location', 'Timestamp', 'timestamp', 'Date', 'date', 'التاريخ', 'الوقت', 'كات', 'کات'];
       for (let key in item.allData) {
-        if (item.allData[key] && !['Latitude', 'Longitude', 'Photo', 'location'].includes(key))
+        if (item.allData[key] && !hiddenKeys.includes(key))
           html += `<tr><td style="color:#64748b;font-weight:bold;">${key}</td><td>${item.allData[key]}</td></tr>`;
       }
       document.getElementById('mBody').innerHTML = html + '</table>';
