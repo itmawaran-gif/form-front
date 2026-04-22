@@ -1108,7 +1108,13 @@
             const isHigh = item.visits >= maxVisits * 0.6;
             html += `
                         <div class="client-row">
-                            <div><div class="client-name">${idx + 1}. ${item.client}</div></div>
+                            <div><div class="client-name">
+  ${idx + 1}. ${item.client}
+  <span style="color:#f59e0b; font-size:12px; margin-right:6px;">
+    <i class="fas fa-star"></i> ${item.rating || 0}
+  </span>
+</div>
+</div>
                             <div class="client-visits ${isHigh ? 'high' : ''}">${item.visits}</div>
                         </div>`;
           });
