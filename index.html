@@ -37,7 +37,7 @@
       background: white;
       padding: 12px 5px;
       border-radius: 15px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       text-align: center;
       border-bottom: 4px solid var(--p);
       transition: 0.3s;
@@ -46,7 +46,7 @@
 
     .stat-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     .stat-card.active-sm {
@@ -76,7 +76,7 @@
     .salary-section {
       background: white;
       border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
       margin-bottom: 20px;
       overflow: hidden;
     }
@@ -96,8 +96,8 @@
     }
 
     .salary-header button {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
       color: white;
       padding: 6px 14px;
       border-radius: 10px;
@@ -107,9 +107,7 @@
       transition: 0.2s;
     }
 
-    .salary-header button:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
+    .salary-header button:hover { background: rgba(255,255,255,0.25); }
 
     .salary-grid {
       display: grid;
@@ -133,13 +131,10 @@
       transform: translateY(-3px);
       border-color: #2563eb;
       background: #eff6ff;
-      box-shadow: 0 6px 15px rgba(37, 99, 235, 0.12);
+      box-shadow: 0 6px 15px rgba(37,99,235,0.12);
     }
 
-    .gauge-svg {
-      width: 100%;
-      max-width: 130px;
-    }
+    .gauge-svg { width: 100%; max-width: 130px; }
 
     .gauge-name {
       font-size: 12px;
@@ -152,9 +147,7 @@
     }
 
     /* Salary Detail Modal */
-    #salaryModal .modal-content {
-      max-width: 480px;
-    }
+    #salaryModal .modal-content { max-width: 480px; }
 
     .salary-modal-header {
       background: linear-gradient(135deg, #0f172a, #334155);
@@ -165,20 +158,10 @@
       text-align: center;
     }
 
-    .salary-modal-header h3 {
-      margin: 0 0 6px;
-      font-size: 20px;
-    }
+    .salary-modal-header h3 { margin: 0 0 6px; font-size: 20px; }
 
-    .big-gauge-wrap {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 5px;
-    }
-
-    .big-gauge-wrap svg {
-      width: 180px;
-    }
+    .big-gauge-wrap { display: flex; justify-content: center; margin-bottom: 5px; }
+    .big-gauge-wrap svg { width: 180px; }
 
     .rating-label {
       font-size: 13px;
@@ -187,9 +170,7 @@
       display: block;
     }
 
-    .progress-section {
-      margin-bottom: 18px;
-    }
+    .progress-section { margin-bottom: 18px; }
 
     .progress-title {
       display: flex;
@@ -200,10 +181,7 @@
       margin-bottom: 6px;
     }
 
-    .progress-title span {
-      color: var(--s);
-      font-weight: 400;
-    }
+    .progress-title span { color: var(--s); font-weight: 400; }
 
     .progress-track {
       background: #e2e8f0;
@@ -216,7 +194,7 @@
     .progress-fill {
       height: 100%;
       border-radius: 10px;
-      transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
       position: relative;
       max-width: 100%;
     }
@@ -224,11 +202,8 @@
     .progress-fill::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), transparent);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, rgba(255,255,255,0.3), transparent);
       border-radius: 10px;
     }
 
@@ -247,39 +222,19 @@
       border-bottom: 3px solid #e2e8f0;
     }
 
-    .salary-stat-box.blue {
-      border-bottom-color: #2563eb;
-    }
+    .salary-stat-box.blue  { border-bottom-color: #2563eb; }
+    .salary-stat-box.green { border-bottom-color: #10b981; }
+    .salary-stat-box.amber { border-bottom-color: #f59e0b; }
+    .salary-stat-box.rose  { border-bottom-color: #f43f5e; }
 
-    .salary-stat-box.green {
-      border-bottom-color: #10b981;
-    }
-
-    .salary-stat-box.amber {
-      border-bottom-color: #f59e0b;
-    }
-
-    .salary-stat-box.rose {
-      border-bottom-color: #f43f5e;
-    }
-
-    .salary-stat-box .sv {
-      font-size: 20px;
-      font-weight: bold;
-      color: #1e293b;
-    }
-
-    .salary-stat-box .sl {
-      font-size: 11px;
-      color: var(--s);
-      margin-top: 3px;
-    }
+    .salary-stat-box .sv { font-size: 20px; font-weight: bold; color: #1e293b; }
+    .salary-stat-box .sl { font-size: 11px; color: var(--s); margin-top: 3px; }
 
     /* Report Section */
     .report-section {
       background: white;
       border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       margin-bottom: 20px;
       overflow: hidden;
     }
@@ -294,11 +249,7 @@
       gap: 10px;
     }
 
-    .report-header h3 {
-      margin: 0;
-      color: white;
-      font-size: 16px;
-    }
+    .report-header h3 { margin: 0; color: white; font-size: 16px; }
 
     .report-period-controls {
       display: flex;
@@ -314,24 +265,18 @@
       border: none;
       font-size: 14px;
       text-align: center;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.2);
       color: white;
       font-weight: bold;
       outline: none;
     }
 
-    .report-period-controls input[type=number]::placeholder {
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .report-period-controls span {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 13px;
-    }
+    .report-period-controls input[type=number]::placeholder { color: rgba(255,255,255,0.7); }
+    .report-period-controls span { color: rgba(255,255,255,0.9); font-size: 13px; }
 
     .report-period-controls button {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
       color: white;
       padding: 6px 12px;
       border-radius: 10px;
@@ -340,19 +285,17 @@
       transition: 0.2s;
     }
 
-    .report-period-controls button:hover {
-      background: rgba(255, 255, 255, 0.35);
-    }
+    .report-period-controls button:hover { background: rgba(255,255,255,0.35); }
 
     .new-only-toggle {
       display: flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255,255,255,0.15);
       padding: 6px 12px;
       border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255,255,255,0.3);
       color: white;
       font-size: 12px;
       font-weight: bold;
@@ -360,9 +303,7 @@
       user-select: none;
     }
 
-    .new-only-toggle:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
+    .new-only-toggle:hover { background: rgba(255,255,255,0.25); }
 
     .new-only-toggle input[type=checkbox] {
       width: 15px;
@@ -372,13 +313,11 @@
     }
 
     .new-only-toggle.active {
-      background: rgba(16, 185, 129, 0.35);
+      background: rgba(16,185,129,0.35);
       border-color: #10b981;
     }
 
-    .report-body {
-      padding: 15px;
-    }
+    .report-body { padding: 15px; }
 
     .report-sm-grid {
       display: grid;
@@ -404,33 +343,14 @@
       transform: translateY(-2px);
     }
 
-    .report-sm-card .sm-name {
-      font-size: 13px;
-      color: #1e293b;
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-
-    .report-sm-card .sm-count {
-      font-size: 22px;
-      font-weight: bold;
-      color: var(--p);
-    }
-
-    .report-sm-card .sm-label {
-      font-size: 11px;
-      color: var(--s);
-      margin-top: 2px;
-    }
-
-    .report-sm-card.zero-rep {
-      opacity: 0.5;
-    }
+    .report-sm-card .sm-name  { font-size: 13px; color: #1e293b; font-weight: 600; margin-bottom: 5px; }
+    .report-sm-card .sm-count { font-size: 22px; font-weight: bold; color: var(--p); }
+    .report-sm-card .sm-label { font-size: 11px; color: var(--s); margin-top: 2px; }
+    .report-sm-card.zero-rep  { opacity: 0.5; }
 
     .report-sm-card .badge-top {
       position: absolute;
-      top: 6px;
-      left: 6px;
+      top: 6px; left: 6px;
       background: var(--green);
       color: white;
       font-size: 10px;
@@ -441,8 +361,7 @@
 
     .report-sm-card .badge-new {
       position: absolute;
-      top: 6px;
-      right: 6px;
+      top: 6px; right: 6px;
       background: var(--p);
       color: white;
       font-size: 9px;
@@ -457,7 +376,7 @@
       background: white;
       padding: 20px;
       border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       margin-bottom: 20px;
     }
 
@@ -479,9 +398,7 @@
       outline: none;
     }
 
-    input[type=date]:focus {
-      border-color: var(--p);
-    }
+    input[type=date]:focus { border-color: var(--p); }
 
     #loader {
       display: none;
@@ -490,7 +407,7 @@
       background: white;
       border-radius: 20px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
 
     .loader-text {
@@ -501,11 +418,7 @@
       font-size: 18px;
     }
 
-    #results {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+    #results { display: flex; flex-direction: column; gap: 5px; }
 
     .visit-item {
       background: white;
@@ -535,24 +448,12 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
-      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 4px 10px rgba(16,185,129,0.3);
     }
 
-    .timeline-header div {
-      text-align: center;
-    }
-
-    .timeline-header span {
-      display: block;
-      font-size: 12px;
-      opacity: 0.9;
-      margin-bottom: 5px;
-    }
-
-    .timeline-header strong {
-      font-size: 18px;
-      letter-spacing: 1px;
-    }
+    .timeline-header div { text-align: center; }
+    .timeline-header span { display: block; font-size: 12px; opacity: 0.9; margin-bottom: 5px; }
+    .timeline-header strong { font-size: 18px; letter-spacing: 1px; }
 
     .visit-divider {
       display: flex;
@@ -566,9 +467,7 @@
     .visit-divider::before {
       content: '';
       position: absolute;
-      left: 50%;
-      top: 0;
-      bottom: 0;
+      left: 50%; top: 0; bottom: 0;
       width: 2px;
       background: #cbd5e1;
       z-index: 1;
@@ -587,26 +486,19 @@
       display: flex;
       gap: 15px;
       align-items: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
-    .divider-badge i {
-      color: #f59e0b;
-    }
-
-    .divider-badge .fa-car {
-      color: var(--p);
-    }
+    .divider-badge i { color: #f59e0b; }
+    .divider-badge .fa-car { color: var(--p); }
 
     /* Modals */
     .modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(15, 23, 42, 0.9);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(15,23,42,0.9);
       z-index: 1000;
       overflow-y: auto;
     }
@@ -629,10 +521,7 @@
       display: none;
     }
 
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    .data-table { width: 100%; border-collapse: collapse; }
 
     .data-table td {
       padding: 10px 5px;
@@ -666,9 +555,7 @@
     }
 
     /* Report Modal */
-    #reportModal .modal-content {
-      max-width: 500px;
-    }
+    #reportModal .modal-content { max-width: 500px; }
 
     .report-modal-header {
       background: linear-gradient(135deg, #1e40af, #2563eb);
@@ -679,16 +566,8 @@
       text-align: center;
     }
 
-    .report-modal-header h3 {
-      margin: 0 0 5px 0;
-      font-size: 18px;
-    }
-
-    .report-modal-header p {
-      margin: 0;
-      font-size: 13px;
-      opacity: 0.85;
-    }
+    .report-modal-header h3 { margin: 0 0 5px 0; font-size: 18px; }
+    .report-modal-header p  { margin: 0; font-size: 13px; opacity: 0.85; }
 
     .client-row {
       display: flex;
@@ -697,21 +576,21 @@
       padding: 12px 10px;
       border-bottom: 1px solid #f1f5f9;
       transition: background 0.15s;
+      cursor: pointer;
     }
 
     .client-row:hover {
-      background: #f8fafc;
+      background: #f0f9ff;
       border-radius: 10px;
     }
 
-    .client-row:last-child {
-      border-bottom: none;
-    }
+    .client-row:last-child { border-bottom: none; }
 
     .client-name {
       font-size: 14px;
-      color: #1e293b;
+      color: var(--p);
       font-weight: 500;
+      text-decoration: underline dotted;
     }
 
     .client-visits {
@@ -730,11 +609,7 @@
       color: var(--green);
     }
 
-    .report-summary {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
+    .report-summary { display: flex; gap: 10px; margin-bottom: 15px; }
 
     .summary-box {
       flex: 1;
@@ -744,17 +619,8 @@
       text-align: center;
     }
 
-    .summary-box .val {
-      font-size: 22px;
-      font-weight: bold;
-      color: var(--p);
-    }
-
-    .summary-box .lbl {
-      font-size: 11px;
-      color: var(--s);
-      margin-top: 3px;
-    }
+    .summary-box .val { font-size: 22px; font-weight: bold; color: var(--p); }
+    .summary-box .lbl { font-size: 11px; color: var(--s); margin-top: 3px; }
 
     .period-inputs {
       display: flex;
@@ -784,11 +650,7 @@
       font-family: inherit;
     }
 
-    .loading-report {
-      text-align: center;
-      padding: 30px;
-      color: var(--s);
-    }
+    .loading-report { text-align: center; padding: 30px; color: var(--s); }
 
     .new-badge-inline {
       display: inline-block;
@@ -803,24 +665,43 @@
       letter-spacing: 0.5px;
     }
 
+    /* Client Modal Header */
+    .client-modal-header {
+      background: linear-gradient(135deg, #065f46, #10b981);
+      margin: -20px -20px 20px -20px;
+      padding: 20px;
+      border-radius: 25px 25px 0 0;
+      color: white;
+      text-align: center;
+    }
+
+    .client-modal-header h3 { margin: 0 0 5px; font-size: 18px; }
+    .client-modal-header p  { margin: 0; font-size: 13px; opacity: 0.85; }
+
+    .client-detail-table { width: 100%; border-collapse: collapse; }
+
+    .client-detail-table td {
+      padding: 9px 6px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+      vertical-align: top;
+    }
+
+    .client-detail-table td:first-child {
+      color: #64748b;
+      font-weight: 600;
+      width: 40%;
+    }
+
     @keyframes sweepRightThenBack {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      45% {
-        transform: rotate(180deg);
-      }
-
-      100% {
-        transform: rotate(var(--target-deg));
-      }
+      0%   { transform: rotate(0deg); }
+      45%  { transform: rotate(180deg); }
+      100% { transform: rotate(var(--target-deg)); }
     }
   </style>
 </head>
 
 <body>
-
   <div class="container">
 
     <!-- ===== قسم تقييم المندوبين (Gauge) ===== -->
@@ -860,7 +741,7 @@
     <!-- ===== قسم اليومي ===== -->
     <div class="card">
       <div class="filter-group">
-        <label style="font-size: 14px; color: var(--s);">بەروار هەڵبژێرە:</label>
+        <label style="font-size:14px; color:var(--s);">بەروار هەڵبژێرە:</label>
         <input type="date" id="sDate" onchange="loadStats()">
       </div>
     </div>
@@ -875,7 +756,7 @@
     <div id="results"></div>
   </div>
 
-  <!-- Modal تفاصيل الزيارة اليومية -->
+  <!-- ===== Modal تفاصيل الزيارة اليومية ===== -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <h3 id="mTitle" style="color:var(--p); margin-top:0; text-align:center;"></h3>
@@ -886,7 +767,7 @@
     </div>
   </div>
 
-  <!-- Modal تقرير المندوب -->
+  <!-- ===== Modal تقرير المندوب ===== -->
   <div id="reportModal" class="modal">
     <div class="modal-content">
       <div class="report-modal-header">
@@ -919,7 +800,25 @@
     </div>
   </div>
 
-  <!-- Modal تقييم المندوب (Salary Detail) -->
+  <!-- ===== Modal تفاصيل العميل (جديد) ===== -->
+  <div id="clientModal" class="modal">
+    <div class="modal-content" style="max-width:450px;">
+      <div class="client-modal-header">
+        <h3 id="cmName">-</h3>
+        <p id="cmVisits">-</p>
+      </div>
+      <div id="cmBody" style="max-height:55vh; overflow-y:auto;">
+        <div class="loading-report"><i class="fas fa-spinner fa-spin"></i></div>
+      </div>
+      <button class="btn-close"
+              onclick="document.getElementById('clientModal').style.display='none'"
+              style="margin-top:10px;">
+        داخستن
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== Modal تقييم المندوب (Salary Detail) ===== -->
   <div id="salaryModal" class="modal">
     <div class="modal-content" style="max-width:480px;">
       <div class="salary-modal-header">
@@ -931,35 +830,26 @@
       </div>
 
       <div class="progress-section">
-        <div class="progress-title">
-          فرۆشتن
-          <span id="smSalesVal">-</span>
-        </div>
+        <div class="progress-title">فرۆشتن<span id="smSalesVal">-</span></div>
         <div class="progress-track">
           <div class="progress-fill" id="smSalesFill"
-            style="width:0%; background:linear-gradient(90deg,#2563eb,#60a5fa);"></div>
+               style="width:0%; background:linear-gradient(90deg,#2563eb,#60a5fa);"></div>
         </div>
       </div>
 
       <div class="progress-section">
-        <div class="progress-title">
-          وەرگرتن
-          <span id="smColVal">-</span>
-        </div>
+        <div class="progress-title">وەرگرتن<span id="smColVal">-</span></div>
         <div class="progress-track">
           <div class="progress-fill" id="smColFill"
-            style="width:0%; background:linear-gradient(90deg,#10b981,#34d399);"></div>
+               style="width:0%; background:linear-gradient(90deg,#10b981,#34d399);"></div>
         </div>
       </div>
 
       <div class="progress-section">
-        <div class="progress-title">
-          ئامانجی مانگانە
-          <span id="smGoalVal">-</span>
-        </div>
+        <div class="progress-title">ئامانجی مانگانە<span id="smGoalVal">-</span></div>
         <div class="progress-track">
           <div class="progress-fill" id="smGoalFill"
-            style="width:0%; background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div>
+               style="width:0%; background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div>
         </div>
       </div>
 
@@ -987,7 +877,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwfJXwN0nk9hc11kJ_JZ-EP23wSnQYaZ2mBIn2WoHWCsX-iVjeOnkfOHSsNnxjdxsd7/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzfLQDFn7_A_rRZMWEp7-QFj6gvNlC6HGdo-5Np9Bur6srLUfSGpriDnDxZWwRVQAfC/exec';
     let lastFetchedData = [];
     let selectedSalesman = "";
     let currentReportSalesman = "";
@@ -1000,7 +890,7 @@
       start.setDate(start.getDate() - (days - 1));
       return {
         start: start.toISOString().split('T')[0],
-        end: end.toISOString().split('T')[0]
+        end:   end.toISOString().split('T')[0]
       };
     }
 
@@ -1015,11 +905,7 @@
 
     function onNewOnlyChange() {
       const label = document.getElementById('newOnlyLabel');
-      if (isNewOnly()) {
-        label.classList.add('active');
-      } else {
-        label.classList.remove('active');
-      }
+      isNewOnly() ? label.classList.add('active') : label.classList.remove('active');
       loadReportStats();
     }
 
@@ -1040,15 +926,15 @@
           const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
           sorted.forEach(([name, count]) => {
             const isZero = count === 0;
-            const isTop = !isZero && count === sorted.find(x => x[1] > 0)?.[1];
+            const isTop  = !isZero && count === sorted.find(x => x[1] > 0)?.[1];
             grid.innerHTML += `
-                        <div class="report-sm-card ${isZero ? 'zero-rep' : ''}" onclick="openReportModal('${name}')">
-                            ${isTop ? '<span class="badge-top"><i class="fas fa-star"></i></span>' : ''}
-                            ${newOnly ? '<span class="badge-new">NEW</span>' : ''}
-                            <div class="sm-name">${name}</div>
-                            <div class="sm-count">${count}</div>
-                            <div class="sm-label">سەردان</div>
-                        </div>`;
+              <div class="report-sm-card ${isZero ? 'zero-rep' : ''}" onclick="openReportModal('${name}')">
+                ${isTop  ? '<span class="badge-top"><i class="fas fa-star"></i></span>' : ''}
+                ${newOnly ? '<span class="badge-new">NEW</span>' : ''}
+                <div class="sm-name">${name}</div>
+                <div class="sm-count">${count}</div>
+                <div class="sm-label">سەردان</div>
+              </div>`;
           });
         }).catch(e => {
           grid.innerHTML = '<div class="loading-report" style="color:red;">هەڵە ڕوویدا</div>';
@@ -1064,11 +950,11 @@
       const newOnly = isNewOnly();
 
       document.getElementById('rmStartDate').value = start;
-      document.getElementById('rmEndDate').value = end;
+      document.getElementById('rmEndDate').value   = end;
       document.getElementById('rmTitle').innerHTML = smName + (newOnly ? ' <span class="new-badge-inline">NEW</span>' : '');
       document.getElementById('rmPeriod').innerText = `${formatDateAr(start)} → ${formatDateAr(end)}`;
-      document.getElementById('rmBody').innerHTML = '<div class="loading-report"><i class="fas fa-spinner fa-spin"></i></div>';
-      document.getElementById('rmTotalVisits').innerText = '-';
+      document.getElementById('rmBody').innerHTML  = '<div class="loading-report"><i class="fas fa-spinner fa-spin"></i></div>';
+      document.getElementById('rmTotalVisits').innerText  = '-';
       document.getElementById('rmTotalClients').innerText = '-';
       document.getElementById('reportModal').style.display = 'block';
 
@@ -1076,8 +962,8 @@
     }
 
     function refreshReportModal() {
-      const start = document.getElementById('rmStartDate').value;
-      const end = document.getElementById('rmEndDate').value;
+      const start  = document.getElementById('rmStartDate').value;
+      const end    = document.getElementById('rmEndDate').value;
       if (!start || !end) return;
       const newOnly = isNewOnly();
       document.getElementById('rmTitle').innerHTML = currentReportSalesman + (newOnly ? ' <span class="new-badge-inline">NEW</span>' : '');
@@ -1086,6 +972,7 @@
       fetchReportData(currentReportSalesman, start, end);
     }
 
+    // ===== جلب بيانات تقرير المندوب (مُعدَّل) =====
     function fetchReportData(smName, start, end) {
       const newOnly = isNewOnly();
       const url = `${API_URL}?action=getReport&salesman=${encodeURIComponent(smName)}&startDate=${start}&endDate=${end}${newOnly ? '&sheetFilter=data' : ''}`;
@@ -1094,38 +981,96 @@
         .then(r => r.json())
         .then(data => {
           const totalVisits = data.reduce((s, x) => s + x.visits, 0);
-          document.getElementById('rmTotalVisits').innerText = totalVisits;
+          document.getElementById('rmTotalVisits').innerText  = totalVisits;
           document.getElementById('rmTotalClients').innerText = data.length;
 
           if (data.length === 0) {
-            document.getElementById('rmBody').innerHTML = '<div class="loading-report">هیچ سەردانێک نەدۆزرایەوە</div>';
+            document.getElementById('rmBody').innerHTML =
+              '<div class="loading-report">هیچ سەردانێک نەدۆزرایەوە</div>';
             return;
           }
 
           const maxVisits = data[0].visits;
           let html = '';
           data.forEach((item, idx) => {
-            const isHigh = item.visits >= maxVisits * 0.6;
+            const isHigh     = item.visits >= maxVisits * 0.6;
+            const useOil     = item.details && item.details['useOil'] && item.details['useOil'].toString().trim() === 'نعم';
+            const nameColor  = useOil ? '#ef4444' : 'var(--p)';
+            const oilBadge   = useOil ? `<span style="background:#fef2f2;color:#ef4444;font-size:10px;padding:2px 6px;border-radius:6px;margin-right:4px;font-weight:bold;"><i class="fas fa-tint"></i> Oil</span>` : '';
+            const detailsEncoded = encodeURIComponent(JSON.stringify(item.details || {}));
             html += `
-                        <div class="client-row">
-                            <div><div class="client-name">
-  ${idx + 1}. ${item.client}
-  <span style="color:#f59e0b; font-size:12px; margin-right:6px;">
-    <i class="fas fa-star"></i> ${item.rating || 0}
-  </span>
-</div>
-</div>
-                            <div class="client-visits ${isHigh ? 'high' : ''}">${item.visits}</div>
-                        </div>`;
+              <div class="client-row"
+                   onclick="openClientModal('${item.client.replace(/'/g, "\\'")}', ${item.visits}, '${detailsEncoded}')">
+                <div>
+                  <div class="client-name" style="color:${nameColor};">
+                    ${idx + 1}. ${item.client}
+                    ${oilBadge}
+                    <span style="color:#f59e0b; font-size:12px; margin-right:6px;">
+                      <i class="fas fa-star"></i> ${item.rating || 0}
+                    </span>
+                    <i class="fas fa-chevron-left" style="font-size:10px; color:#94a3b8; margin-right:4px;"></i>
+                  </div>
+                </div>
+                <div class="client-visits ${isHigh ? 'high' : ''}">${item.visits}</div>
+              </div>`;
           });
           document.getElementById('rmBody').innerHTML = html;
         }).catch(e => {
-          document.getElementById('rmBody').innerHTML = '<div class="loading-report" style="color:red;">هەڵە ڕوویدا</div>';
+          document.getElementById('rmBody').innerHTML =
+            '<div class="loading-report" style="color:red;">هەڵە ڕوویدا</div>';
           console.error(e);
         });
     }
 
     function closeReportModal() { document.getElementById('reportModal').style.display = 'none'; }
+
+    // ===== فتح نافذة تفاصيل العميل (جديد) =====
+    function openClientModal(clientName, visitCount, detailsEncoded) {
+      document.getElementById('cmName').innerText   = clientName;
+      document.getElementById('cmVisits').innerText = '\u06a9\u06c6\u06cc \u0633\u06d5\u0631\u062f\u0627\u0646\u06d5\u06a9\u0627\u0646: ' + visitCount;
+      document.getElementById('clientModal').style.display = 'block';
+
+      let details = {};
+      try { details = JSON.parse(decodeURIComponent(detailsEncoded)); } catch(e) {}
+
+      // مفاتيح مخفية (تقنية أو روابط خام)
+      const hiddenKeys = [
+        'Latitude','Longitude','Photo','location','Timestamp','timestamp',
+        'Date','date','\u0627\u0644\u062a\u0627\u0631\u064a\u062e','\u0627\u0644\u0648\u0642\u062a',
+        '\u06a9\u0627\u062a','\u06a9\u0627\u062a','\u0645\u0627\u0648\u06d5\u06cc \u0633\u06d5\u0631\u062f\u0627\u0646\u06a9\u0631\u062f\u0646','Day',
+        '__mapUrl__','__photoUrl__'
+      ];
+
+      // رابط الخريطة — أولوية للمفتاح الصريح ثم البحث بالاسم
+      const mapUrl = details['__mapUrl__'] ||
+        ((Object.entries(details).find(([k, v]) =>
+          v && (k.toLowerCase().includes('location') || k.includes('\u0646\u06d5\u062e\u0634\u06d5'))
+        ) || [])[1]) || '';
+
+      const entries = Object.entries(details).filter(([k, v]) =>
+        v && v.toString().trim() && !hiddenKeys.includes(k)
+      );
+
+      if (!entries.length) {
+        document.getElementById('cmBody').innerHTML =
+          '<div class="loading-report">\u0647\u06cc\u0686 \u0632\u0627\u0646\u06cc\u0627\u0631\u06cc\u06cc\u06d5\u06a9\u06cc \u0632\u06cc\u0627\u062f\u06d5 \u0646\u06cc\u06cc\u06d5</div>';
+        return;
+      }
+
+      let html = '<table class="client-detail-table">';
+      entries.forEach(([key, val]) => {
+        html += '<tr><td>' + key + '</td><td>' + val + '</td></tr>';
+      });
+      html += '</table>';
+
+      if (mapUrl) {
+        html += '<a href="' + mapUrl + '" target="_blank" class="btn-act" style="display:block; text-align:center; margin-top:12px;">' +
+                '<i class="fas fa-map-marker-alt"></i> \u0646\u06d5\u062e\u0634\u06d5\u06cc \u06a9\u0695\u06cc\u0627\u0631' +
+                '</a>';
+      }
+
+      document.getElementById('cmBody').innerHTML = html;
+    }
 
     // ===== القسم اليومي =====
     window.onload = () => {
@@ -1162,11 +1107,11 @@
           for (let sm in data) {
             let isZero = data[sm] === 0;
             statsArea.innerHTML += `
-                        <div class="stat-card ${isZero ? 'zero' : ''} ${sm === selectedSalesman ? 'active-sm' : ''}"
-                             onclick="selectAndSearch('${sm}')">
-                            <h5>${sm}</h5>
-                            <div>${data[sm]}</div>
-                        </div>`;
+              <div class="stat-card ${isZero ? 'zero' : ''} ${sm === selectedSalesman ? 'active-sm' : ''}"
+                   onclick="selectAndSearch('${sm}')">
+                <h5>${sm}</h5>
+                <div>${data[sm]}</div>
+              </div>`;
           }
         }).catch(e => { toggleLoader(false); console.error(e); });
     }
@@ -1181,22 +1126,29 @@
     }
 
     function getDistanceInKm(lat1, lon1, lat2, lon2) {
-      lat1 = parseFloat(lat1); lon1 = parseFloat(lon1); lat2 = parseFloat(lat2); lon2 = parseFloat(lon2);
+      lat1 = parseFloat(lat1); lon1 = parseFloat(lon1);
+      lat2 = parseFloat(lat2); lon2 = parseFloat(lon2);
       if (isNaN(lat1) || isNaN(lon1) || isNaN(lat2) || isNaN(lon2)) return null;
-      const R = 6371, dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+      const R = 6371,
+            dLat = (lat2 - lat1) * Math.PI / 180,
+            dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
       return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))).toFixed(2);
     }
 
     function parseDurationToMinutes(d) {
       if (!d) return 0;
       let s = String(d).trim();
-      if (s.includes(':')) { let p = s.split(':'); return p.length === 3 ? parseInt(p[0]) * 60 + parseInt(p[1]) : parseInt(p[0]) * 60 + parseInt(p[1]); }
+      if (s.includes(':')) {
+        let p = s.split(':');
+        return p.length === 3 ? parseInt(p[0]) * 60 + parseInt(p[1]) : parseInt(p[0]) * 60 + parseInt(p[1]);
+      }
       return parseFloat(s) || 0;
     }
 
     function getVisitDateObj(item) {
-      for (let k of ['Timestamp', 'timestamp', 'Date', 'date', 'التاريخ', 'الوقت', 'كات', 'کات']) {
+      for (let k of ['Timestamp','timestamp','Date','date','التاريخ','الوقت','كات','کات']) {
         if (item[k]) return new Date(item[k]);
         if (item.allData && item.allData[k]) return new Date(item.allData[k]);
       }
@@ -1211,7 +1163,10 @@
     async function search(sm, isAutoUpdate = false) {
       const dt = document.getElementById('sDate').value;
       const resDiv = document.getElementById('results');
-      if (!isAutoUpdate) { resDiv.innerHTML = ''; toggleLoader(true, `گەڕان بۆ چالاکییەکانی (${sm})...`); }
+      if (!isAutoUpdate) {
+        resDiv.innerHTML = '';
+        toggleLoader(true, `گەڕان بۆ چالاکییەکانی (${sm})...`);
+      }
 
       try {
         const [data, workStartTime] = await Promise.all([
@@ -1230,158 +1185,155 @@
         lastFetchedData = data;
 
         let firstVisit = data[0], lastVisit = data[data.length - 1];
-        let firstEnd = getVisitDateObj(firstVisit);
+        let firstEnd   = getVisitDateObj(firstVisit);
         let globalStart = new Date(firstEnd.getTime() - parseDurationToMinutes(firstVisit.duration) * 60000);
-        let globalEnd = getVisitDateObj(lastVisit);
+        let globalEnd   = getVisitDateObj(lastVisit);
 
-        // بلوك وقت بدء الدوام (على يمين وقت بدء الزيارات)
         const workStartBlock = workStartTime
           ? `<div style="text-align:center;">
-           <span style="display:block; font-size:12px; opacity:0.85; margin-bottom:5px;">دەستپێکردنی كار</span>
-           <strong style="font-size:18px; letter-spacing:1px; color:#fbbf24;">${workStartTime}</strong>
-         </div>`
+               <span style="display:block; font-size:12px; opacity:0.85; margin-bottom:5px;">دەستپێکردنی كار</span>
+               <strong style="font-size:18px; letter-spacing:1px; color:#fbbf24;">${workStartTime}</strong>
+             </div>`
           : '';
 
         let html = `
-      <div class="timeline-header">
-        ${workStartBlock}
-        <div style="text-align:center;">
-          <span style="display:block; font-size:12px; opacity:0.9; margin-bottom:5px;">دەستپێکردنى سەردانەکان</span>
-          <strong style="font-size:18px; letter-spacing:1px;">${formatTime(globalStart)}</strong>
-        </div>
-        <div style="text-align:center;"><i class="fas fa-route fa-2x"></i></div>
-        <div style="text-align:center;">
-          <span style="display:block; font-size:12px; opacity:0.9; margin-bottom:5px;">کۆتایی</span>
-          <strong style="font-size:18px; letter-spacing:1px;">${formatTime(globalEnd)}</strong>
-        </div>
-      </div>
-      <h4 style="text-align:center;color:var(--p);margin-bottom:15px;">چالاکییەکانی: ${sm}</h4>`;
+          <div class="timeline-header">
+            ${workStartBlock}
+            <div style="text-align:center;">
+              <span style="display:block; font-size:12px; opacity:0.9; margin-bottom:5px;">دەستپێکردنى سەردانەکان</span>
+              <strong style="font-size:18px; letter-spacing:1px;">${formatTime(globalStart)}</strong>
+            </div>
+            <div style="text-align:center;"><i class="fas fa-route fa-2x"></i></div>
+            <div style="text-align:center;">
+              <span style="display:block; font-size:12px; opacity:0.9; margin-bottom:5px;">کۆتایی</span>
+              <strong style="font-size:18px; letter-spacing:1px;">${formatTime(globalEnd)}</strong>
+            </div>
+          </div>
+          <h4 style="text-align:center;color:var(--p);margin-bottom:15px;">چالاکییەکانی: ${sm}</h4>`;
 
         data.forEach((item, index) => {
-          html += `<div class="visit-item" onclick="showDetailsByIndex(${index})">
-        <div><strong>${item.name}</strong><br><small style="color:var(--s)">${item.type}</small></div>
-        <div><i class="far fa-clock"></i> ${item.duration}</div>
-      </div>`;
+          html += `
+            <div class="visit-item" onclick="showDetailsByIndex(${index})">
+              <div><strong>${item.name}</strong><br><small style="color:var(--s)">${item.type}</small></div>
+              <div><i class="far fa-clock"></i> ${item.duration}</div>
+            </div>`;
+
           if (index < data.length - 1) {
             let ni = data[index + 1];
-            let dist = getDistanceInKm(item.allData['Latitude'], item.allData['Longitude'], ni.allData['Latitude'], ni.allData['Longitude']);
+            let dist     = getDistanceInKm(item.allData['Latitude'], item.allData['Longitude'], ni.allData['Latitude'], ni.allData['Longitude']);
             let distText = dist ? `${dist} KM` : 'نەزانراو';
-            let cEnd = getVisitDateObj(item), nEnd = getVisitDateObj(ni);
-            let nStart = new Date(nEnd.getTime() - parseDurationToMinutes(ni.duration) * 60000);
-            let gapMin = Math.max(0, Math.floor((nStart.getTime() - cEnd.getTime()) / 60000));
-            let gapText = gapMin >= 60 ? `${Math.floor(gapMin / 60)}h ${gapMin % 60}m` : `${gapMin}m`;
-            html += `<div class="visit-divider"><div class="divider-badge">
-          <span><i class="fas fa-car"></i> ${distText}</span>
-          <span><i class="fas fa-hourglass-half"></i> ${gapText}</span>
-        </div></div>`;
+            let cEnd     = getVisitDateObj(item), nEnd = getVisitDateObj(ni);
+            let nStart   = new Date(nEnd.getTime() - parseDurationToMinutes(ni.duration) * 60000);
+            let gapMin   = Math.max(0, Math.floor((nStart.getTime() - cEnd.getTime()) / 60000));
+            let gapText  = gapMin >= 60 ? `${Math.floor(gapMin / 60)}h ${gapMin % 60}m` : `${gapMin}m`;
+            html += `
+              <div class="visit-divider">
+                <div class="divider-badge">
+                  <span><i class="fas fa-car"></i> ${distText}</span>
+                  <span><i class="fas fa-hourglass-half"></i> ${gapText}</span>
+                </div>
+              </div>`;
           }
         });
 
         resDiv.innerHTML = html;
 
-      } catch (e) {
+      } catch(e) {
         toggleLoader(false);
         console.error(e);
       }
     }
 
     function showDetailsByIndex(index) {
-      const item = lastFetchedData[index]; if (!item) return;
+      const item = lastFetchedData[index];
+      if (!item) return;
       document.getElementById('mTitle').innerText = item.name;
       const img = document.getElementById('mImg');
       if (item.photo) {
         let fid = "";
-        if (item.photo.includes('id=')) fid = item.photo.split('id=')[1].split('&')[0];
+        if (item.photo.includes('id='))  fid = item.photo.split('id=')[1].split('&')[0];
         else if (item.photo.includes('/d/')) fid = item.photo.split('/d/')[1].split('/')[0];
         img.src = `https://drive.google.com/thumbnail?id=${fid}&sz=w1000`;
         img.style.display = 'block';
       } else { img.style.display = 'none'; }
-      let html = '';
 
+      let html = '';
       let visitDateObj = getVisitDateObj(item);
       if (visitDateObj && visitDateObj.getTime() !== 0) {
         const dateStr = visitDateObj.toLocaleDateString('en-GB');
         const timeStr = formatTime(visitDateObj);
-
         html += `
-        <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
-            <div style="background:#f8fafc; padding:12px; border-radius:12px; text-align:center; flex:1; border: 1px solid #e2e8f0;">
-                <i class="far fa-calendar-alt" style="color:var(--p); font-size:20px; margin-bottom:5px;"></i>
-                <div style="font-size:11px; color:var(--s); margin-bottom:2px;">بەروار</div>
-                <div style="font-weight:bold; color:#1e293b; font-size:14px; direction:ltr;">${dateStr}</div>
+          <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+            <div style="background:#f8fafc; padding:12px; border-radius:12px; text-align:center; flex:1; border:1px solid #e2e8f0;">
+              <i class="far fa-calendar-alt" style="color:var(--p); font-size:20px; margin-bottom:5px;"></i>
+              <div style="font-size:11px; color:var(--s); margin-bottom:2px;">بەروار</div>
+              <div style="font-weight:bold; color:#1e293b; font-size:14px; direction:ltr;">${dateStr}</div>
             </div>
-            <div style="background:#f8fafc; padding:12px; border-radius:12px; text-align:center; flex:1; border: 1px solid #e2e8f0;">
-                <i class="far fa-clock" style="color:var(--p); font-size:20px; margin-bottom:5px;"></i>
-                <div style="font-size:11px; color:var(--s); margin-bottom:2px;">کات</div>
-                <div style="font-weight:bold; color:#1e293b; font-size:14px; direction:ltr;">${timeStr}</div>
+            <div style="background:#f8fafc; padding:12px; border-radius:12px; text-align:center; flex:1; border:1px solid #e2e8f0;">
+              <i class="far fa-clock" style="color:var(--p); font-size:20px; margin-bottom:5px;"></i>
+              <div style="font-size:11px; color:var(--s); margin-bottom:2px;">کات</div>
+              <div style="font-weight:bold; color:#1e293b; font-size:14px; direction:ltr;">${timeStr}</div>
             </div>
-        </div>`;
+          </div>`;
       }
 
       html += '<table class="data-table">';
-      const hiddenKeys = ['Latitude', 'Longitude', 'Photo', 'location', 'Timestamp', 'timestamp', 'Date', 'date', 'التاريخ', 'الوقت', 'كات', 'کات'];
+      const hiddenKeys = ['Latitude','Longitude','Photo','location','Timestamp','timestamp','Date','date','التاريخ','الوقت','كات','کات'];
       for (let key in item.allData) {
         if (item.allData[key] && !hiddenKeys.includes(key))
           html += `<tr><td style="color:#64748b;font-weight:bold;">${key}</td><td>${item.allData[key]}</td></tr>`;
       }
       document.getElementById('mBody').innerHTML = html + '</table>';
-      document.getElementById('mFooter').innerHTML = item.location ? `<a href="${item.location}" target="_blank" class="btn-act"><i class="fas fa-map-marker-alt"></i> نەخشە</a>` : '';
+      document.getElementById('mFooter').innerHTML = item.location
+        ? `<a href="${item.location}" target="_blank" class="btn-act"><i class="fas fa-map-marker-alt"></i> نەخشە</a>`
+        : '';
       document.getElementById('modal').style.display = 'block';
     }
 
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
     // ===== Salary / Gauge Section =====
-
     function buildGaugeSVG(value, max, cx, cy, r, strokeW, small) {
-      const pct = Math.min(1, Math.max(0, value / max));
+      const pct   = Math.min(1, Math.max(0, value / max));
       const angle = Math.PI - pct * Math.PI;
-      const ex = cx + r * Math.cos(angle);
-      const ey = cy - r * Math.sin(angle);
-      const large = 0; // Fix: Semi-circle arcs never exceed 180 degrees
-      const lx = cx - r;
-      const ly = cy;
-      const rx = cx + r;
-      const ry = cy;
+      const ex    = cx + r * Math.cos(angle);
+      const ey    = cy - r * Math.sin(angle);
+      const lx    = cx - r, ly = cy;
+      const rx    = cx + r, ry = cy;
       const color = pct < 0.4 ? '#ef4444' : pct < 0.7 ? '#f59e0b' : '#10b981';
-      const fs = small ? 16 : 28;
-      const subFs = small ? 8 : 13;
+      const fs    = small ? 16 : 28;
 
-      // Gradient stops for background track
       const arcFill = pct > 0
-        ? `<path d="M ${lx} ${ly} A ${r} ${r} 0 ${large} 1 ${ex.toFixed(2)} ${ey.toFixed(2)}"
-                      fill="none" stroke="${color}" stroke-width="${strokeW}"
-                      stroke-linecap="round" opacity="0.9"/>`
+        ? `<path d="M ${lx} ${ly} A ${r} ${r} 0 0 1 ${ex.toFixed(2)} ${ey.toFixed(2)}"
+                   fill="none" stroke="${color}" stroke-width="${strokeW}"
+                   stroke-linecap="round" opacity="0.9"/>`
         : '';
 
-      // Needle line
       const needleAngle = pct * 180;
       const needle = pct > 0
         ? `<line x1="${cx}" y1="${cy}" x2="${cx - (r - strokeW)}" y2="${cy}"
-                         stroke="${color}" stroke-width="${small ? 2 : 3}" stroke-linecap="round" opacity="0.6" style="transform-origin: ${cx}px ${cy}px; --target-deg: ${needleAngle}deg; transform: rotate(${needleAngle}deg); animation: sweepRightThenBack 1.5s ease-in-out forwards;"/>`
+                 stroke="${color}" stroke-width="${small ? 2 : 3}" stroke-linecap="round" opacity="0.6"
+                 style="transform-origin:${cx}px ${cy}px; --target-deg:${needleAngle}deg;
+                        transform:rotate(${needleAngle}deg);
+                        animation:sweepRightThenBack 1.5s ease-in-out forwards;"/>`
         : '';
 
-      const roundedVal = Math.round(value);
-      const roundedMax = Math.round(max);
       return `
-              <defs>
-                <linearGradient id="gaugeGrad_${cx}" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%"   stop-color="#ef4444"/>
-                  <stop offset="50%"  stop-color="#f59e0b"/>
-                  <stop offset="100%" stop-color="#10b981"/>
-                </linearGradient>
-              </defs>
-              <path d="M ${lx} ${ly} A ${r} ${r} 0 1 1 ${rx} ${ry}"
-                    fill="none" stroke="#e2e8f0" stroke-width="${strokeW}" stroke-linecap="round"/>
-              ${arcFill}
-              ${needle}
-              <circle cx="${cx}" cy="${cy}" r="${small ? 3 : 5}" fill="${color}"/>
-              <text x="${cx}" y="${cy - (small ? 5 : 8)}" text-anchor="middle"
-                    font-size="${fs}" font-weight="bold" fill="${color}"
-                    font-family="'Segoe UI',Tahoma,sans-serif">${roundedVal}%</text>
-              <text x="${cx}" y="${cy + (small ? 11 : 20)}" text-anchor="middle"
-                    font-size="${subFs}" fill="#94a3b8"
-                    font-family="'Segoe UI',Tahoma,sans-serif"></text>`;
+        <defs>
+          <linearGradient id="gaugeGrad_${cx}" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stop-color="#ef4444"/>
+            <stop offset="50%"  stop-color="#f59e0b"/>
+            <stop offset="100%" stop-color="#10b981"/>
+          </linearGradient>
+        </defs>
+        <path d="M ${lx} ${ly} A ${r} ${r} 0 1 1 ${rx} ${ry}"
+              fill="none" stroke="#e2e8f0" stroke-width="${strokeW}" stroke-linecap="round"/>
+        ${arcFill}
+        ${needle}
+        <circle cx="${cx}" cy="${cy}" r="${small ? 3 : 5}" fill="${color}"/>
+        <text x="${cx}" y="${cy - (small ? 5 : 8)}" text-anchor="middle"
+              font-size="${fs}" font-weight="bold" fill="${color}"
+              font-family="'Segoe UI',Tahoma,sans-serif">${Math.round(value)}%</text>`;
     }
 
     function loadSalaryData() {
@@ -1397,33 +1349,46 @@
             grid.innerHTML = '<div class="loading-report" style="grid-column:1/-1;">هیچ داتایەک نەدۆزرایەوە</div>';
             return;
           }
-          const maxRating = Math.max(...data.map(d => { let rt = parseFloat(d.rating) || 0; return (rt > 0 && rt <= 1) ? rt * 100 : rt; }), 100);
+          const maxRating = Math.max(...data.map(d => {
+            let rt = parseFloat(d.rating) || 0;
+            return (rt > 0 && rt <= 1) ? rt * 100 : rt;
+          }), 100);
+
           data.forEach((sm, i) => {
             let r = parseFloat(sm.rating) || 0;
             if (r > 0 && r <= 1) r = r * 100;
-            const max = Math.max(maxRating, 100);
-            const pct = Math.min(100, Math.max(0, (r / max) * 100));
+            const max   = Math.max(maxRating, 100);
+            const pct   = Math.min(100, Math.max(0, (r / max) * 100));
             const angle = (pct / 100) * 180;
             const safeName = sm.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
             grid.innerHTML += `
-                        <div class="gauge-card" onclick="openSalaryModal('${safeName}')" style="display:flex; flex-direction:column; align-items:center;">
-                            <svg viewBox="0 0 100 55" class="gauge-svg" xmlns="http://www.w3.org/2000/svg">
-                                <defs>
-                                    <linearGradient id="gaugeGrad_${i}" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" style="stop-color:#B0E4CC" />
-                                        <stop offset="50%" style="stop-color:#408A71" />
-                                        <stop offset="100%" style="stop-color:#285A48" />
-                                    </linearGradient>
-                                </defs>
-                                <path d="M 12 50 A 39 39 0 0 1 90 50 A 6 6 0 0 1 78 50 A 33 33 0 0 0 12 50 Z" fill="#e2e8f0" opacity="0.4"/>
-                                <path d="M 12 50 A 39 39 0 0 1 90 50 A 6 6 0 0 1 78 50 A 33 33 0 0 0 12 50 Z" fill="url(#gaugeGrad_${i})"/>
-                                <line x1="50" y1="50" x2="15" y2="50" stroke="#091413" stroke-width="3" stroke-linecap="round" style="transform-origin: 50px 50px; --target-deg: ${angle}deg; transform: rotate(${angle}deg); animation: sweepRightThenBack 1.5s ease-in-out forwards;"/>
-                                <circle cx="50" cy="50" r="3" fill="#ffffff" stroke="#091413" stroke-width="1.5"/>
-                            </svg>
-                            <div class="gauge-name" style="margin-top:8px;">${sm.name}</div>
-                            <div style="font-size:22px; font-weight:bold; color:#0f172a; margin-top:2px;">${pct.toFixed(0)} <span style="font-size:14px; margin-right:-2px">%</span></div>
-                            <div style="font-size:10px; color:#64748b; margin-top:4px;">اضغط للتفاصيل</div>
-                        </div>`;
+              <div class="gauge-card" onclick="openSalaryModal('${safeName}')"
+                   style="display:flex; flex-direction:column; align-items:center;">
+                <svg viewBox="0 0 100 55" class="gauge-svg" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="gaugeGrad_${i}" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%"   style="stop-color:#B0E4CC"/>
+                      <stop offset="50%"  style="stop-color:#408A71"/>
+                      <stop offset="100%" style="stop-color:#285A48"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M 12 50 A 39 39 0 0 1 90 50 A 6 6 0 0 1 78 50 A 33 33 0 0 0 12 50 Z"
+                        fill="#e2e8f0" opacity="0.4"/>
+                  <path d="M 12 50 A 39 39 0 0 1 90 50 A 6 6 0 0 1 78 50 A 33 33 0 0 0 12 50 Z"
+                        fill="url(#gaugeGrad_${i})"/>
+                  <line x1="50" y1="50" x2="15" y2="50"
+                        stroke="#091413" stroke-width="3" stroke-linecap="round"
+                        style="transform-origin:50px 50px; --target-deg:${angle}deg;
+                               transform:rotate(${angle}deg);
+                               animation:sweepRightThenBack 1.5s ease-in-out forwards;"/>
+                  <circle cx="50" cy="50" r="3" fill="#ffffff" stroke="#091413" stroke-width="1.5"/>
+                </svg>
+                <div class="gauge-name" style="margin-top:8px;">${sm.name}</div>
+                <div style="font-size:22px; font-weight:bold; color:#0f172a; margin-top:2px;">
+                  ${pct.toFixed(0)}<span style="font-size:14px; margin-right:-2px">%</span>
+                </div>
+                <div style="font-size:10px; color:#64748b; margin-top:4px;">دەستبژێرە بۆ وردەکاری</div>
+              </div>`;
           });
         }).catch(e => {
           grid.innerHTML = '<div class="loading-report" style="grid-column:1/-1;color:red;">هەڵە ڕوویدا</div>';
@@ -1434,25 +1399,21 @@
     function fmtNum(v) {
       const n = Number(v) || 0;
       if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-      if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+      if (n >= 1000)    return (n / 1000).toFixed(1) + 'K';
       return n.toString();
     }
 
     function setProgressBar(fillId, val, target) {
-      const v = Number(val) || 0;
-      const t = Number(target) || 0;
+      const v   = Number(val)    || 0;
+      const t   = Number(target) || 0;
       const max = Math.max(v, t, 1) * 1.1;
-      const pctFill = Math.min(100, (v / max) * 100);
-
+      const pct = Math.min(100, (v / max) * 100);
       const fill = document.getElementById(fillId);
-
-      // Reset first for animation replay
       fill.style.transition = 'none';
       fill.style.width = '0%';
-
       setTimeout(() => {
         fill.style.transition = 'width 0.75s cubic-bezier(0.4,0,0.2,1)';
-        fill.style.width = pctFill.toFixed(1) + '%';
+        fill.style.width = pct.toFixed(1) + '%';
       }, 60);
     }
 
@@ -1460,55 +1421,45 @@
       const sm = salaryData.find(d => d.name === name);
       if (!sm) return;
 
-      const maxRating = Math.max(...salaryData.map(d => { let rt = parseFloat(d.rating) || 0; return (rt > 0 && rt <= 1) ? rt * 100 : rt; }), 100);
+      const maxRating = Math.max(...salaryData.map(d => {
+        let rt = parseFloat(d.rating) || 0;
+        return (rt > 0 && rt <= 1) ? rt * 100 : rt;
+      }), 100);
       let r = parseFloat(sm.rating) || 0;
       if (r > 0 && r <= 1) r = r * 100;
       const rPct = r / maxRating;
 
-      // Header
       document.getElementById('smName').innerText = name;
-
-      // Big gauge
       const svg = document.getElementById('smGaugeSvg');
       svg.innerHTML = buildGaugeSVG(r, maxRating, 100, 90, 72, 13, false);
 
-      // Rating label
       const rLabel = rPct < 0.4 ? '🔴 ئاستی خراپ' : rPct < 0.7 ? '🟡 ئاستی مامناوەند' : '🟢 ئاستی نایاب';
       document.getElementById('smRatingLabel').innerText = rLabel;
 
-      // Show modal first so elements are visible for transition
       document.getElementById('salaryModal').style.display = 'block';
 
-      // Progress bar labels
       document.getElementById('smSalesVal').innerText = `${fmtNum(sm.sales)} / ${fmtNum(sm.salesTarget)}`;
-      document.getElementById('smColVal').innerText = `${fmtNum(sm.collection)} / ${fmtNum(sm.collectionTarget)}`;
-      document.getElementById('smGoalVal').innerText = `${fmtNum(sm.monthlyGoal)} / ${fmtNum(sm.monthlyGoalTarget)}`;
+      document.getElementById('smColVal').innerText   = `${fmtNum(sm.collection)} / ${fmtNum(sm.collectionTarget)}`;
+      document.getElementById('smGoalVal').innerText  = `${fmtNum(sm.monthlyGoal)} / ${fmtNum(sm.monthlyGoalTarget)}`;
 
-      // Animate progress bars
       setProgressBar('smSalesFill', sm.sales, sm.salesTarget);
-      setProgressBar('smColFill', sm.collection, sm.collectionTarget);
-      setProgressBar('smGoalFill', sm.monthlyGoal, sm.monthlyGoalTarget);
+      setProgressBar('smColFill',   sm.collection, sm.collectionTarget);
+      setProgressBar('smGoalFill',  sm.monthlyGoal, sm.monthlyGoalTarget);
 
-      // Stats
-      document.getElementById('smAttendance').innerText = sm.attendance || '-';
-      document.getElementById('smVisitCount').innerText = sm.visitCount || '-';
-      document.getElementById('smDailyAvg').innerText = sm.dailyVisitAvg || '-';
-      document.getElementById('smTimeAvg').innerText = sm.visitTimeAvg || '-';
+      document.getElementById('smAttendance').innerText = sm.attendance  || '-';
+      document.getElementById('smVisitCount').innerText = sm.visitCount  || '-';
+      document.getElementById('smDailyAvg').innerText   = sm.dailyVisitAvg || '-';
+      document.getElementById('smTimeAvg').innerText    = sm.visitTimeAvg  || '-';
     }
 
-    function closeSalaryModal() {
-      document.getElementById('salaryModal').style.display = 'none';
-    }
+    function closeSalaryModal() { document.getElementById('salaryModal').style.display = 'none'; }
 
-    // إغلاق المودال عند الضغط على الخلفية
+    // إغلاق أي modal عند النقر على الخلفية
     document.querySelectorAll('.modal').forEach(modal => {
-      modal.addEventListener('click', function (e) {
-        if (e.target === this) {
-          this.style.display = 'none';
-        }
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) this.style.display = 'none';
       });
     });
   </script>
 </body>
-
 </html>
