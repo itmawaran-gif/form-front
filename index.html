@@ -1572,14 +1572,26 @@
     function setProgressBar(fillId, val, target) {
       const v = Number(val) || 0;
       const t = Number(target) || 0;
-      const max = Math.max(v, t, 1) * 1.1;
-      const pct = Math.min(100, (v / max) * 100);
+
+      let pct;
+
+      if (t <= 0) {
+        pct = 0;
+      } else {
+        pct = (v / t) * 100;
+      }
+
+      // 👇 هذا أهم تعديل
+      if (pct >= 100) pct = 100;
+
       const fill = document.getElementById(fillId);
+
       fill.style.transition = 'none';
       fill.style.width = '0%';
+
       setTimeout(() => {
         fill.style.transition = 'width 0.75s cubic-bezier(0.4,0,0.2,1)';
-        fill.style.width = pct.toFixed(1) + '%';
+        fill.style.width = pct + '%';
       }, 60);
     }
 
