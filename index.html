@@ -1035,7 +1035,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzfLQDFn7_A_rRZMWEp7-QFj6gvNlC6HGdo-5Np9Bur6srLUfSGpriDnDxZWwRVQAfC/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycby-zRLM1PW-qMnUhMJBIOE03eD6x2X08sWc96mE398cSwYfdlKIRy3AfAXD4a4Vtcnw/exec';
     let lastFetchedData = [];
     let selectedSalesman = "";
     let currentReportSalesman = "";
@@ -1450,9 +1450,46 @@
           html += `<tr><td style="color:#64748b;font-weight:bold;">${key}</td><td>${item.allData[key]}</td></tr>`;
       }
       document.getElementById('mBody').innerHTML = html + '</table>';
-      document.getElementById('mFooter').innerHTML = item.location
-        ? `<a href="${item.location}" target="_blank" class="btn-act"><i class="fas fa-map-marker-alt"></i> نەخشە</a>`
-        : '';
+      // ===== بناء نص مشاركة واتساب =====
+      const rtl = '\u200F';
+      let waLines = [];
+      waLines.push(`${rtl}📋 *${item.name}*`);
+      waLines.push(`${rtl}🗂️ *${item.type}*`);
+      if (visitDateObj && visitDateObj.getTime() !== 0) {
+        waLines.push(`${rtl}📅 ${visitDateObj.toLocaleDateString('en-GB')}  🕐 ${formatTime(visitDateObj)}`);
+      }
+      waLines.push(`${rtl}─────────────────`);
+      for (let key in item.allData) {
+        if (item.allData[key] && !hiddenKeys.includes(key))
+          waLines.push(`${rtl}• *${key}:* ${item.allData[key]}`);
+      }
+      if (item.location) waLines.push(`${rtl}📍 ${item.location}`);
+      const waCaption = waLines.join('\n');
+
+      // رابط الصورة للمشاركة
+      let photoShareUrl = '';
+      if (item.photo) {
+        let fid = '';
+        if (item.photo.includes('id=')) fid = item.photo.split('id=')[1].split('&')[0];
+        else if (item.photo.includes('/d/')) fid = item.photo.split('/d/')[1].split('/')[0];
+        if (fid) photoShareUrl = `https://drive.google.com/thumbnail?id=${fid}&sz=w1000`;
+      }
+
+      const captionEncoded = encodeURIComponent(waCaption).replace(/'/g, "\\'");
+
+      let footerHtml = '';
+      if (item.location)
+        footerHtml += `<a href="${item.location}" target="_blank" class="btn-act"
+    style="flex:1; margin-left:8px;">
+    <i class="fas fa-map-marker-alt"></i> نەخشە
+  </a>`;
+      footerHtml += `<button onclick="shareVisitWhatsApp(decodeURIComponent('${captionEncoded}'), '${photoShareUrl}', this)"
+  class="btn-act" style="flex:1; background:#25D366; border:none; cursor:pointer;
+  font-family:inherit; font-size:14px; font-weight:bold;">
+  <i class="fab fa-whatsapp"></i> واتساپ
+</button>`;
+
+      document.getElementById('mFooter').innerHTML = footerHtml;
       document.getElementById('modal').style.display = 'block';
     }
 
@@ -1631,6 +1668,58 @@
     }
 
     function closeSalaryModal() { document.getElementById('salaryModal').style.display = 'none'; }
+    async function shareVisitWhatsApp(caption, photoUrl, btnEl) {
+      btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      btnEl.style.pointerEvents = 'none';
+
+      const restore = () => {
+        btnEl.innerHTML = '<i class="fab fa-whatsapp"></i> واتساپ';
+        btnEl.style.pointerEvents = '';
+      };
+
+      // ===== استخراج fileId من رابط Drive =====
+      let fileId = '';
+      if (photoUrl) {
+        const m1 = photoUrl.match(/[?&]id=([^&]+)/);
+        const m2 = photoUrl.match(/\/d\/([^/]+)\//);
+        const m3 = photoUrl.match(/thumbnail\?id=([^&]+)/);
+        fileId = (m3 || m1 || m2 || [])[1] || '';
+      }
+
+      // ===== محاولة إرسال صورة + نص =====
+      if (fileId && navigator.share) {
+        try {
+          // جلب الصورة عبر GAS proxy (يتجاوز CORS)
+          const res = await fetch(`${API_URL}?action=getImageBase64&fileId=${fileId}`);
+          const json = await res.json();
+
+          if (json.data && !json.error) {
+            // تحويل base64 → Blob → File
+            const byteChars = atob(json.data);
+            const byteArr = new Uint8Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++)
+              byteArr[i] = byteChars.charCodeAt(i);
+
+            const mimeType = json.mimeType || 'image/jpeg';
+            const ext = mimeType.includes('png') ? 'png' : 'jpg';
+            const blob = new Blob([byteArr], { type: mimeType });
+            const file = new File([blob], `visit.${ext}`, { type: mimeType });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({ files: [file], text: caption });
+              restore();
+              return;
+            }
+          }
+        } catch (e) {
+          console.warn('فشل جلب الصورة عبر GAS:', e);
+        }
+      }
+
+      // ===== Fallback: نص فقط =====
+      window.open(`https://wa.me/?text=${encodeURIComponent(caption)}`, '_blank');
+      restore();
+    }
 
     // إغلاق أي modal عند النقر على الخلفية
     document.querySelectorAll('.modal').forEach(modal => {
