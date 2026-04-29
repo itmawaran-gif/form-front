@@ -857,6 +857,18 @@
         transform: rotate(var(--target-deg));
       }
     }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
   </style>
 </head>
 
@@ -1035,7 +1047,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycby-zRLM1PW-qMnUhMJBIOE03eD6x2X08sWc96mE398cSwYfdlKIRy3AfAXD4a4Vtcnw/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxi5aRfzgxIBlCg9YTcOoa4AZ_KGSm4KC_X5ckaKjDLRmVYNlHUxSvxQkPuz-ZT6Lrt/exec';
     let lastFetchedData = [];
     let selectedSalesman = "";
     let currentReportSalesman = "";
@@ -1668,6 +1680,30 @@
     }
 
     function closeSalaryModal() { document.getElementById('salaryModal').style.display = 'none'; }
+    // ===== JSONP helper — يتجاوز CORS كلياً =====
+    function fetchJsonp(url) {
+      return new Promise((resolve, reject) => {
+        const cbName = '_jsonp_' + Date.now();
+        const script = document.createElement('script');
+        const timer = setTimeout(() => {
+          delete window[cbName];
+          script.remove();
+          reject(new Error('timeout'));
+        }, 15000);
+
+        window[cbName] = (data) => {
+          clearTimeout(timer);
+          delete window[cbName];
+          script.remove();
+          resolve(data);
+        };
+
+        script.src = url + '&callback=' + cbName;
+        script.onerror = () => { clearTimeout(timer); reject(new Error('script error')); };
+        document.head.appendChild(script);
+      });
+    }
+
     async function shareVisitWhatsApp(caption, photoUrl, btnEl) {
       btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       btnEl.style.pointerEvents = 'none';
@@ -1677,48 +1713,101 @@
         btnEl.style.pointerEvents = '';
       };
 
-      // ===== استخراج fileId من رابط Drive =====
+      // ===== استخراج fileId =====
       let fileId = '';
       if (photoUrl) {
-        const m1 = photoUrl.match(/[?&]id=([^&]+)/);
-        const m2 = photoUrl.match(/\/d\/([^/]+)\//);
-        const m3 = photoUrl.match(/thumbnail\?id=([^&]+)/);
-        fileId = (m3 || m1 || m2 || [])[1] || '';
+        const m = photoUrl.match(/thumbnail\?id=([^&]+)/) ||
+          photoUrl.match(/[?&]id=([^&]+)/) ||
+          photoUrl.match(/\/d\/([^/]+)\//);
+        if (m) fileId = m[1];
       }
 
-      // ===== محاولة إرسال صورة + نص =====
-      if (fileId && navigator.share) {
-        try {
-          // جلب الصورة عبر GAS proxy (يتجاوز CORS)
-          const res = await fetch(`${API_URL}?action=getImageBase64&fileId=${fileId}`);
-          const json = await res.json();
+      // ===== بدون صورة: نص فقط عبر wa.me =====
+      if (!fileId || !navigator.share) {
+        window.open(`https://wa.me/?text=${encodeURIComponent(caption)}`, '_blank');
+        restore();
+        return;
+      }
 
-          if (json.data && !json.error) {
-            // تحويل base64 → Blob → File
-            const byteChars = atob(json.data);
-            const byteArr = new Uint8Array(byteChars.length);
-            for (let i = 0; i < byteChars.length; i++)
-              byteArr[i] = byteChars.charCodeAt(i);
+      try {
+        // 1. جلب الصورة base64 عبر JSONP
+        const json = await fetchJsonp(`${API_URL}?action=getImageBase64&fileId=${fileId}`);
+        if (!json.data || json.error) throw new Error(json.error || 'no data');
 
-            const mimeType = json.mimeType || 'image/jpeg';
-            const ext = mimeType.includes('png') ? 'png' : 'jpg';
-            const blob = new Blob([byteArr], { type: mimeType });
-            const file = new File([blob], `visit.${ext}`, { type: mimeType });
+        // 2. تحميل الصورة الأصلية
+        const origImg = await new Promise((res, rej) => {
+          const i = new Image();
+          i.onload = () => res(i);
+          i.onerror = rej;
+          i.src = `data:${json.mimeType || 'image/jpeg'};base64,${json.data}`;
+        });
 
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-              await navigator.share({ files: [file], text: caption });
-              restore();
-              return;
-            }
+        // 3. إعداد Canvas = صورة + شريط نصي في الأسفل
+        const lines = caption.split('\n').filter(l => l.trim());
+        const padX = 20;
+        const lineH = 32;
+        const padTop = 16;
+        const padBot = 16;
+        const boxH = padTop + lines.length * lineH + padBot;
+        const cW = origImg.width;
+        const cH = origImg.height + boxH;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = cW;
+        canvas.height = cH;
+        const ctx = canvas.getContext('2d');
+
+        // رسم الصورة
+        ctx.drawImage(origImg, 0, 0, cW, origImg.height);
+
+        // خلفية الشريط النصي
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, origImg.height, cW, boxH);
+
+        // النص — RTL
+        ctx.direction = 'rtl';
+        ctx.textAlign = 'right';
+        ctx.font = `bold ${Math.max(18, Math.round(cW / 30))}px 'Segoe UI', Tahoma, sans-serif`;
+
+        lines.forEach((line, idx) => {
+          // تلوين السطور المهمة
+          if (line.includes('📋') || line.includes('🗂️')) {
+            ctx.fillStyle = '#60a5fa';   // أزرق فاتح للاسم والنوع
+          } else if (line.includes('📅') || line.includes('🕐')) {
+            ctx.fillStyle = '#fbbf24';   // أصفر للتاريخ
+          } else if (line.includes('📍')) {
+            ctx.fillStyle = '#34d399';   // أخضر للخريطة
+          } else if (line.includes('─')) {
+            ctx.fillStyle = '#475569';   // رمادي للفاصل
+          } else {
+            ctx.fillStyle = '#f1f5f9';   // أبيض للبيانات
           }
-        } catch (e) {
-          console.warn('فشل جلب الصورة عبر GAS:', e);
-        }
-      }
 
-      // ===== Fallback: نص فقط =====
-      window.open(`https://wa.me/?text=${encodeURIComponent(caption)}`, '_blank');
-      restore();
+          // إزالة علامة RTL من بداية السطر (مرئية على Canvas)
+          const cleanLine = line.replace(/\u200F/g, '').trim();
+          const y = origImg.height + padTop + (idx + 1) * lineH - 6;
+          ctx.fillText(cleanLine, cW - padX, y);
+        });
+
+        // 4. تحويل Canvas إلى File
+        const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.92));
+        const file = new File([blob], 'visit.jpg', { type: 'image/jpeg' });
+
+        if (!navigator.canShare || !navigator.canShare({ files: [file] })) {
+          throw new Error('canShare false');
+        }
+
+        // 5. مشاركة الصورة المدمجة
+        await navigator.share({ files: [file] });
+        restore();
+
+      } catch (e) {
+        if (e.name !== 'AbortError') {
+          console.warn('fallback to text:', e.message);
+          window.open(`https://wa.me/?text=${encodeURIComponent(caption)}`, '_blank');
+        }
+        restore();
+      }
     }
 
     // إغلاق أي modal عند النقر على الخلفية
