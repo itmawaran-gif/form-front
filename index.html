@@ -1414,7 +1414,13 @@
           }
         });
 
-        resDiv.innerHTML = html;
+      resDiv.innerHTML = html;
+
+        if (!isAutoUpdate) {
+          setTimeout(() => {
+            resDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
 
       } catch (e) {
         toggleLoader(false);
