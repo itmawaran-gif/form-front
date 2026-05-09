@@ -1023,39 +1023,41 @@
         </div>
       </div>
 
-      <div class="salary-stats-grid">
-        <div class="salary-stat-box blue">
-          <div class="sv" id="smAttendance">-</div>
-          <div class="sl">ڕێژەی ئامادەبوون</div>
-        </div>
-        <div class="salary-stat-box green">
-          <div class="sv" id="smVisitCount">-</div>
-          <div class="sl">سەردانی ئەم مانگە</div>
-        </div>
-        <div class="salary-stat-box amber">
-          <div class="sv" id="smDailyAvg">-</div>
-          <div class="sl">تێکڕای سەردان/ڕۆژ</div>
-        </div>
-        <div class="salary-stat-box rose">
-          <div class="sv" id="smTimeAvg">-</div>
-          <div class="sl">تێکڕای کاتی سەردان</div>
-        </div>
-         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
-         <div class="salary-stat-box" style="border-bottom-color:#8b5cf6;">
-         <div class="sv" id="smNewClients" style="color:#8b5cf6;">-</div>
-         <div class="sl">کڕیاری نوێ</div>
-         </div>
-         <div class="salary-stat-box" style="border-bottom-color:#06b6d4;">
-         <div class="sv" id="smFirstVisit" style="font-size:15px; color:#06b6d4;">-</div>
-         <div class="sl">تێکڕای یەکەم سەردان</div>
-         </div>
-         <div class="salary-stat-box" style="border-bottom-color:#f97316;">
-         <div class="sv" id="smLastVisit" style="font-size:15px; color:#f97316;">-</div>
-         <div class="sl">تێکڕای کۆتا سەردان</div>
-         </div>
-      </div>
+      <!-- کۆنی کە لابدەیت — لە <div class="salary-stats-grid"> تا داخستنەکەی -->
 
-      <button class="btn-close" onclick="closeSalaryModal()" style="margin-top:15px;">داخستن</button>
+<!-- نوێ — گرید یەکگرتوو 2 ستوون بۆ هەموو 7 خانە -->
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:15px;">
+  <div class="salary-stat-box blue">
+    <div class="sv" id="smAttendance">-</div>
+    <div class="sl">ڕێژەی ئامادەبوون</div>
+  </div>
+  <div class="salary-stat-box green">
+    <div class="sv" id="smVisitCount">-</div>
+    <div class="sl">سەردانی ئەم مانگە</div>
+  </div>
+  <div class="salary-stat-box amber">
+    <div class="sv" id="smDailyAvg">-</div>
+    <div class="sl">تێکڕای سەردان/ڕۆژ</div>
+  </div>
+  <div class="salary-stat-box rose">
+    <div class="sv" id="smTimeAvg">-</div>
+    <div class="sl">تێکڕای کاتی سەردان</div>
+  </div>
+  <div class="salary-stat-box" style="border-bottom-color:#8b5cf6;">
+    <div class="sv" id="smNewClients" style="color:#8b5cf6;">-</div>
+    <div class="sl">کڕیاری نوێ</div>
+  </div>
+  <div class="salary-stat-box" style="border-bottom-color:#06b6d4;">
+    <div class="sv" id="smFirstVisit" style="font-size:15px; color:#06b6d4;">-</div>
+    <div class="sl">تێکڕای یەکەم سەردان</div>
+  </div>
+  <div class="salary-stat-box" style="border-bottom-color:#f97316; grid-column:1/-1;">
+    <div class="sv" id="smLastVisit" style="font-size:15px; color:#f97316;">-</div>
+    <div class="sl">تێکڕای کۆتا سەردان</div>
+  </div>
+</div>
+
+<button class="btn-close" onclick="closeSalaryModal()" style="margin-top:15px;">داخستن</button>
     </div>
   </div>
 
@@ -1663,6 +1665,21 @@
       }, 60);
     }
 
+    // فۆرمات کردنی کات — ISO string یان ژمارەی شیتی بۆ HH:MM
+function fmtTime(val) {
+  if (!val || val === '-' || val === '' || val === 0) return '-';
+  const s = val.toString().trim();
+  // ISO string — وەکوو "1899-12-30T10:30:24.000Z"
+  if (s.includes('T') && s.includes(':')) {
+    const t = new Date(s);
+    if (!isNaN(t.getTime())) {
+      const h = String(t.getUTCHours()).padStart(2, '0');
+      const m = String(t.getUTCMinutes()).padStart(2, '0');
+      return `${h}:${m}`;
+    }
+  }
+  return s;
+}
     function openSalaryModal(name) {
       const sm = salaryData.find(d => d.name === name);
       if (!sm) return;
@@ -1697,8 +1714,8 @@
       document.getElementById('smDailyAvg').innerText = sm.dailyVisitAvg || '-';
       document.getElementById('smTimeAvg').innerText = sm.visitTimeAvg || '-';
       document.getElementById('smNewClients').innerText = sm.newClients || '-';
-      document.getElementById('smFirstVisit').innerText  = sm.firstVisitAvg || '-';
-      document.getElementById('smLastVisit').innerText   = sm.lastVisitAvg  || '-';
+      document.getElementById('smFirstVisit').innerText = fmtTime(sm.firstVisitAvg);
+      document.getElementById('smLastVisit').innerText  = fmtTime(sm.lastVisitAvg);
     }
 
     function closeSalaryModal() { document.getElementById('salaryModal').style.display = 'none'; }
