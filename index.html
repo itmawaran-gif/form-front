@@ -878,7 +878,7 @@
     <!-- ===== قسم تقييم المندوبين (Gauge) ===== -->
     <div class="salary-section">
       <div class="salary-header">
-        <h3><i class="fas fa-tachometer-alt" style="margin-left:8px;"></i>پێداچوونەوەی نوێنەران</h3>
+        <h3><i class="fas fa-tachometer-alt" style="margin-left:8px;"></i>پێداچوونەوەی نوێنەران (ئەم مانگە)</h3>
         <button onclick="loadSalaryData()"><i class="fas fa-sync-alt"></i></button>
       </div>
       <div id="salaryGrid" class="salary-grid">
@@ -1040,6 +1040,19 @@
           <div class="sv" id="smTimeAvg">-</div>
           <div class="sl">تێکڕای کاتی سەردان</div>
         </div>
+         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+         <div class="salary-stat-box" style="border-bottom-color:#8b5cf6;">
+         <div class="sv" id="smNewClients" style="color:#8b5cf6;">-</div>
+         <div class="sl">کڕیاری نوێ</div>
+         </div>
+         <div class="salary-stat-box" style="border-bottom-color:#06b6d4;">
+         <div class="sv" id="smFirstVisit" style="font-size:15px; color:#06b6d4;">-</div>
+         <div class="sl">تێکڕای یەکەم سەردان</div>
+         </div>
+         <div class="salary-stat-box" style="border-bottom-color:#f97316;">
+         <div class="sv" id="smLastVisit" style="font-size:15px; color:#f97316;">-</div>
+         <div class="sl">تێکڕای کۆتا سەردان</div>
+         </div>
       </div>
 
       <button class="btn-close" onclick="closeSalaryModal()" style="margin-top:15px;">داخستن</button>
@@ -1683,6 +1696,9 @@
       document.getElementById('smVisitCount').innerText = sm.visitCount || '-';
       document.getElementById('smDailyAvg').innerText = sm.dailyVisitAvg || '-';
       document.getElementById('smTimeAvg').innerText = sm.visitTimeAvg || '-';
+      document.getElementById('smNewClients').innerText = sm.newClients || '-';
+      document.getElementById('smFirstVisit').innerText  = sm.firstVisitAvg || '-';
+      document.getElementById('smLastVisit').innerText   = sm.lastVisitAvg  || '-';
     }
 
     function closeSalaryModal() { document.getElementById('salaryModal').style.display = 'none'; }
