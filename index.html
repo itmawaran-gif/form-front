@@ -1045,17 +1045,22 @@
     <div class="sl">تێکڕای کاتی سەردان</div>
   </div>
   <div class="salary-stat-box" style="border-bottom-color:#06b6d4;">
-    <div class="sv" id="smFirstVisit" style="font-size:15px; color:#06b6d4;">-</div>
+    <div class="sv" id="smFirstVisit">-</div>
     <div class="sl">تێکڕای یەکەم سەردان</div>
   </div>
   <div class="salary-stat-box" style="border-bottom-color:#f97316; grid-column:1/-1;">
-    <div class="sv" id="smLastVisit" style="font-size:15px; color:#f97316;">-</div>
+    <div class="sv" id="smLastVisit">-</div>
     <div class="sl">تێکڕای کۆتا سەردان</div>
   </div>
   <div class="salary-stat-box blue">
     <div class="sv" id="smAttendance">-</div>
     <div class="sl">ڕێژەی ئامادەبوون</div>
   </div>
+  <div class="salary-stat-box rose">
+    <div class="sv" id="smSalary">-</div>
+    <div class="sl">مووچەی مانگانە</div>
+  </div>
+  
 </div>
 
 <button class="btn-close" onclick="closeSalaryModal()" style="margin-top:15px;">داخستن</button>
@@ -1063,7 +1068,7 @@
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbymauzmhF2X1txKjVK07XNLSfcEnE8hBQKKve8MFOuGU8nd2nFQn1Ll0AKas8bXKoof/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbz7XYh6ekOJgQQAVFBSgpdbpeOnte3NyX5gIDQHOZQ5gf3fyk4_4Qyg_FMTz4hkNsrv/exec';
     let lastFetchedData = [];
     let selectedSalesman = "";
     let currentReportSalesman = "";
@@ -1717,6 +1722,7 @@ function fmtTime(val) {
       document.getElementById('smNewClients').innerText = sm.newClients || '-';
       document.getElementById('smFirstVisit').innerText = fmtTime(sm.firstVisitAvg);
       document.getElementById('smLastVisit').innerText  = fmtTime(sm.lastVisitAvg);
+      document.getElementById('smSalary').innerText = sm.salary ? Number(sm.salary).toLocaleString() + ' IQD' : '-';
     }
 
     function closeSalaryModal() { document.getElementById('salaryModal').style.display = 'none'; }
