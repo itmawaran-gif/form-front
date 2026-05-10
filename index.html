@@ -1724,6 +1724,25 @@ function fmtTime(val) {
       document.getElementById('smLastVisit').innerText  = fmtTime(sm.lastVisitAvg);
       document.getElementById('smSalary').innerText = sm.salary ? Number(sm.salary).toLocaleString() + ' IQD' : '-';
     }
+    function fmtTime(timeStr) {
+
+  if (!timeStr || timeStr === '-') return '-';
+
+  let match = timeStr.toString().trim()
+    .match(/(\d+):(\d+)(?::(\d+))?/);
+
+  if (!match) return timeStr;
+
+  let hours = parseInt(match[1], 10);
+  let minutes = match[2];
+
+  let period = hours >= 12 ? 'PM' : 'AM';
+
+  hours = hours % 12;
+  if (hours === 0) hours = 12;
+
+  return `${hours}:${minutes} ${period}`;
+}
 
     function closeSalaryModal() { document.getElementById('salaryModal').style.display = 'none'; }
     // ===== JSONP helper — يتجاوز CORS كلياً =====
