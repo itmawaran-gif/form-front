@@ -1969,11 +1969,23 @@ function renderSalaryWarnings(sm) {
             </div>
           </div>
         </div>
-        <span style="background:${isRed ? '#fca5a5' : '#fde047'};
-                     color:${isRed ? '#7f1d1d' : '#713f12'};
-                     padding:3px 10px; border-radius:9999px; font-size:10px; font-weight:bold;">
-          وردەکاری
-        </span>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span style="background:${isRed ? '#fca5a5' : '#fde047'};
+                       color:${isRed ? '#7f1d1d' : '#713f12'};
+                       padding:3px 10px; border-radius:9999px; font-size:10px; font-weight:bold;
+                       cursor:pointer;"
+                onclick="event.stopPropagation(); showWarnDetailAdmin(${w.num}, '${w.text.replace(/'/g, "\\'")}')">
+            وردەکاری
+          </span>
+          <span onclick="event.stopPropagation(); deleteWarning(${w.num})"
+                style="background:#fee2e2; color:#991b1b;
+                       padding:3px 8px; border-radius:9999px; font-size:12px; font-weight:bold;
+                       cursor:pointer; transition:0.2s;"
+                onmouseover="this.style.background='#fecaca'"
+                onmouseout="this.style.background='#fee2e2'">
+            🗑
+          </span>
+        </div>
       </div>`;
   });
   container.innerHTML = html;
@@ -1981,7 +1993,6 @@ function renderSalaryWarnings(sm) {
 
 function showWarnDetailAdmin(num, text) {
   const isRed = num === 3;
-  const note = 'ئەگەر بە تەواوی بە هەموو ڕێنماییەکانی کۆمپانیا پابەند بوو و بۆ ماوەی ٣ مانگی هیچ ئەرکێکی تر نەکرد ئاگادارکردنەوەکە هەڵوەشێندرێتەوە.';
   
   // نستخدم modal الإنذار الموجود إن كان، أو نعرض alert بسيط
   if (document.getElementById('addWarnModal')) {
@@ -1999,12 +2010,6 @@ function showWarnDetailAdmin(num, text) {
           ${isRed ? '🔴' : '⚠️'} ئاگادارکردنەوە #${num}
         </h3>
         <p style="color:#1e293b; font-size:14px; line-height:1.7; text-align:center;">${text}</p>
-        <div style="background:#fef9c3; border:1px solid #fde047; border-radius:10px; 
-                    padding:10px; margin:12px 0;">
-          <p style="color:#713f12; font-size:11px; font-weight:bold; margin:0; line-height:1.6;">
-            ${note}
-          </p>
-        </div>
         <button class="btn-close" onclick="document.getElementById('warnDetailAdminModal').remove()">
           داخستن
         </button>
@@ -2027,9 +2032,21 @@ function openAddWarnModal() {
 async function submitWarning() {
   const name = currentSalaryModalName;
   const text = document.getElementById('warnText').value.trim();
-  const slot = document.getElementById('warnSlot').value;
+  const slot = parseInt(document.getElementById('warnSlot').value);
 
   if (!text) { alert('تکایە نوسینی ئاگادارکردنەوە بنووسە'); return; }
+
+  // ─── تحقق من وجود إنذار سابق في نفس الخانة ───
+  const sm = salaryData.find(d => d.name === name);
+  if (sm) {
+    const existing = sm['warn' + slot] || '';
+    if (existing.trim() !== '') {
+      const preview = existing.length > 60 ? existing.substring(0, 60) + '...' : existing;
+      const confirmMsg = 
+        `⚠️ ئاگادارکردنەوە #${slot} پێشتر هەیە:\n\n"${preview}"\n\nدەتەوێت جێگرەوە بکەیت؟`;
+      if (!confirm(confirmMsg)) return;
+    }
+  }
 
   const btn = event.target;
   btn.innerText = '...';
@@ -2054,6 +2071,27 @@ async function submitWarning() {
 
   btn.innerText = '✅ پاشەکەوتکردن';
   btn.disabled = false;
+ }
+ async function deleteWarning(slot) {
+  const name = currentSalaryModalName;
+  if (!name) return;
+  
+  const confirmMsg = `ئاگادارکردنەوە #${slot} بسڕیتەوە؟`;
+  if (!confirm(confirmMsg)) return;
+
+  try {
+    const url = `${API_URL}?action=addWarning&name=${encodeURIComponent(name)}&text=&slot=${slot}`;
+    const res = await fetch(url).then(r => r.json());
+    if (res.success) {
+      await loadSalaryData();
+      const updated = salaryData.find(d => d.name === name);
+      if (updated) renderSalaryWarnings(updated);
+    } else {
+      alert('هەڵە: ' + (res.error || 'نەزانراو'));
+    }
+  } catch(e) {
+    alert('هەڵەی پەیوەندی');
+  }
 }
 
 
