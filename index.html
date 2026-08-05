@@ -844,6 +844,27 @@
       width: 40%;
     }
 
+    /* Retry / error banner */
+    .retry-box {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 25px 15px;
+      color: #b91c1c;
+    }
+
+    .retry-box button {
+      margin-top: 10px;
+      background: var(--p);
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
     @keyframes sweepRightThenBack {
       0% {
         transform: rotate(0deg);
@@ -1126,6 +1147,45 @@
     let currentReportSalesman = "";
     let salaryData = [];
 
+    // ============================================================
+    // ===== fetchSmart: fetch مع timeout + إعادة محاولة تلقائية =====
+    // (هذا هو الحل الرئيسي لمشكلة التأخر/الفشل في كروم)
+    // ============================================================
+    async function fetchSmart(url, { timeoutMs = 20000, retries = 2, retryDelayMs = 1200 } = {}) {
+      let lastErr;
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          const res = await fetch(url, {
+            signal: controller.signal,
+            cache: 'no-store',
+            redirect: 'follow'
+          });
+          clearTimeout(timer);
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return await res.json();
+        } catch (err) {
+          clearTimeout(timer);
+          lastErr = err;
+          // لا تعيد المحاولة إذا كانت آخر محاولة
+          if (attempt < retries) {
+            await new Promise(r => setTimeout(r, retryDelayMs * (attempt + 1)));
+            continue;
+          }
+        }
+      }
+      throw lastErr;
+    }
+
+    function errorRetryHtml(message, retryFnName) {
+      return `<div class="retry-box">
+                <i class="fas fa-triangle-exclamation" style="font-size:22px;"></i>
+                <div style="margin-top:8px;">${message}</div>
+                <button onclick="${retryFnName}()"><i class="fas fa-rotate-right"></i> دووبارە هەوڵبدەوە</button>
+              </div>`;
+    }
+
     // ===== حساب تواريخ الفترة =====
     function getPeriodDates(days) {
       const end = new Date();
@@ -1162,8 +1222,7 @@
 
       const url = `${API_URL}?action=getReportStats&startDate=${start}&endDate=${end}${newOnly ? '&sheetFilter=data' : ''}`;
 
-      fetch(url)
-        .then(r => r.json())
+      fetchSmart(url)
         .then(data => {
           grid.innerHTML = '';
           const validNames = salaryData.map(sm => sm.name.trim());
@@ -1182,7 +1241,7 @@
               </div>`;
           });
         }).catch(e => {
-          grid.innerHTML = '<div class="loading-report" style="color:red;">هەڵە ڕوویدا</div>';
+          grid.innerHTML = errorRetryHtml('هەڵە ڕوویدا لە باردکردنی ڕاپۆرت (کاتی نەبوو یان پەیوەندی سست بوو)', 'loadReportStats');
           console.error(e);
         });
     }
@@ -1222,8 +1281,7 @@
       const newOnly = isNewOnly();
       const url = `${API_URL}?action=getReport&salesman=${encodeURIComponent(smName)}&startDate=${start}&endDate=${end}${newOnly ? '&sheetFilter=data' : ''}`;
 
-      fetch(url)
-        .then(r => r.json())
+      fetchSmart(url)
         .then(data => {
           const totalVisits = data.reduce((s, x) => s + x.visits, 0);
           document.getElementById('rmTotalVisits').innerText = totalVisits;
@@ -1262,7 +1320,10 @@
           document.getElementById('rmBody').innerHTML = html;
         }).catch(e => {
           document.getElementById('rmBody').innerHTML =
-            '<div class="loading-report" style="color:red;">هەڵە ڕوویدا</div>';
+            errorRetryHtml('هەڵە ڕوویدا لە باردکردنی داتا', `fetchReportData_retry_${btoa(unescape(encodeURIComponent(smName))).replace(/=/g,'')}`);
+          // fallback بسيط لضمان اشتغال زر إعادة المحاولة بدون تعقيد أسماء ديناميكية
+          window['fetchReportData_retry_' + btoa(unescape(encodeURIComponent(smName))).replace(/=/g, '')] =
+            () => fetchReportData(smName, start, end);
           console.error(e);
         });
     }
@@ -1320,18 +1381,22 @@
     // ===== القسم اليومي =====
     window.onload = async () => {
       document.getElementById('sDate').valueAsDate = new Date();
+      // ===== تحميل متسلسل (وليس متوازٍ) لتخفيف الضغط على Apps Script =====
+      // متتالٍ = يقلّل احتمال فشل/تعليق كل الطلبات دفعة واحدة على كروم
       try {
         await loadSalaryData();
       } catch (e) { console.error(e); }
-      loadStats(true);
-      loadReportStats();
+      try {
+        await loadStats(true);
+      } catch (e) { console.error(e); }
+      try {
+        await loadReportStats();
+      } catch (e) { console.error(e); }
 
       setInterval(async () => {
-        try {
-          await loadSalaryData();
-        } catch (e) { console.error(e); }
-        loadStats(false);
-        loadReportStats();
+        try { await loadSalaryData(); } catch (e) { console.error(e); }
+        try { await loadStats(false); } catch (e) { console.error(e); }
+        try { await loadReportStats(); } catch (e) { console.error(e); }
         if (selectedSalesman !== "") search(selectedSalesman, true);
       }, 10 * 60 * 1000);
     };
@@ -1347,8 +1412,7 @@
       const statsArea = document.getElementById('statsArea');
       if (isInitial) { toggleLoader(true, "نوێنەرەکان باردەکرێن..."); statsArea.innerHTML = ''; }
       statsArea.style.opacity = "0.5";
-      fetch(`${API_URL}?action=getStats&date=${dt}`)
-        .then(r => r.json())
+      return fetchSmart(`${API_URL}?action=getStats&date=${dt}`)
         .then(data => {
           statsArea.style.opacity = "1";
           toggleLoader(false);
@@ -1364,7 +1428,12 @@
                 <div>${data[sm]}</div>
               </div>`;
           }
-        }).catch(e => { toggleLoader(false); console.error(e); });
+        }).catch(e => {
+          statsArea.style.opacity = "1";
+          toggleLoader(false);
+          statsArea.innerHTML = errorRetryHtml('هەڵە ڕوویدا لە باردکردنی نوێنەرەکان', 'loadStats');
+          console.error(e);
+        });
     }
 
     function selectAndSearch(smName) {
@@ -1421,8 +1490,8 @@
 
       try {
         const [data, workStartTime] = await Promise.all([
-          fetch(`${API_URL}?action=search&salesman=${encodeURIComponent(sm)}&date=${dt}`).then(r => r.json()),
-          fetch(`${API_URL}?action=getStartTime&salesman=${encodeURIComponent(sm)}&date=${dt}`).then(r => r.json())
+          fetchSmart(`${API_URL}?action=search&salesman=${encodeURIComponent(sm)}&date=${dt}`),
+          fetchSmart(`${API_URL}?action=getStartTime&salesman=${encodeURIComponent(sm)}&date=${dt}`)
         ]);
 
         toggleLoader(false);
@@ -1497,6 +1566,8 @@
 
       } catch (e) {
         toggleLoader(false);
+        resDiv.innerHTML = errorRetryHtml('هەڵە ڕوویدا لە باردکردنی چالاکییەکان', 'searchRetryWrapper');
+        window.searchRetryWrapper = () => search(sm, isAutoUpdate);
         console.error(e);
       }
     }
@@ -1634,8 +1705,7 @@
       const grid = document.getElementById('salaryGrid');
       grid.innerHTML = '<div class="loading-report" style="grid-column:1/-1;padding:30px;"><i class="fas fa-spinner fa-spin"></i> باردەکرێت...</div>';
 
-      return fetch(`${API_URL}?action=getSalaryData`)
-        .then(r => r.json())
+      return fetchSmart(`${API_URL}?action=getSalaryData`)
         .then(data => {
           salaryData = data;
           grid.innerHTML = '';
@@ -1685,7 +1755,7 @@
               </div>`;
           });
         }).catch(e => {
-          grid.innerHTML = '<div class="loading-report" style="grid-column:1/-1;color:red;">هەڵە ڕوویدا</div>';
+          grid.innerHTML = errorRetryHtml('هەڵە ڕوویدا لە باردکردنی نوێنەرەکان', 'loadSalaryData');
           console.error(e);
         });
     }
@@ -2054,7 +2124,7 @@ async function submitWarning() {
 
   try {
     const url = `${API_URL}?action=addWarning&name=${encodeURIComponent(name)}&text=${encodeURIComponent(text)}&slot=${slot}`;
-    const res = await fetch(url).then(r => r.json());
+    const res = await fetchSmart(url);
     if (res.success) {
       document.getElementById('addWarnModal').style.display = 'none';
       // تحديث البيانات وإعادة رسم الإنذارات
@@ -2066,7 +2136,7 @@ async function submitWarning() {
       alert('هەڵە: ' + (res.error || 'نەزانراو'));
     }
   } catch(e) {
-    alert('هەڵەی پەیوەندی');
+    alert('هەڵەی پەیوەندی (تکایە پەیوەندی ئینتەرنێت پشکنین بکە و دووبارە هەوڵبدەوە)');
   }
 
   btn.innerText = '✅ پاشەکەوتکردن';
@@ -2081,7 +2151,7 @@ async function submitWarning() {
 
   try {
     const url = `${API_URL}?action=addWarning&name=${encodeURIComponent(name)}&text=&slot=${slot}`;
-    const res = await fetch(url).then(r => r.json());
+    const res = await fetchSmart(url);
     if (res.success) {
       await loadSalaryData();
       const updated = salaryData.find(d => d.name === name);
@@ -2090,7 +2160,7 @@ async function submitWarning() {
       alert('هەڵە: ' + (res.error || 'نەزانراو'));
     }
   } catch(e) {
-    alert('هەڵەی پەیوەندی');
+    alert('هەڵەی پەیوەندی (تکایە پەیوەندی ئینتەرنێت پشکنین بکە و دووبارە هەوڵبدەوە)');
   }
 }
 
